@@ -1,0 +1,21 @@
+<p>characters-list works!</p>
+@if (isLoading$ | async) {
+    загрузка...
+}
+@else {
+    <div class="container">
+        @for (character of characters$ | async; track character.id) {
+            <div class="character-info">
+                <h2>{{character.name}}</h2>
+                <p>{{character.status}}</p>
+                <p>{{character.species}}</p>
+                <p>{{character.type}}</p>
+                <p>{{character.gender}}</p>
+                <p>{{character.origin.name}}</p>
+                <p>{{character.location.name}}</p>
+                <img [src]="character.image">
+                <p>{{character.created}}</p>
+            </div>
+        }
+    </div>
+}
