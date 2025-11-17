@@ -1,0 +1,18 @@
+<p>locations-list works!</p>
+@if (isLoading$ | async) {
+    загрузка...
+}
+@else {
+    <div class="container">
+        @for (location of locations$ | async; track $index) {
+            <div class="location-info">
+                <h2>{{location.name}}</h2>
+                <p>{{location.type}}</p>
+                <p>{{location.dimension}}</p>
+                <p>{{location.residents}}</p>
+                <p>{{location.url}}</p>
+                <p>{{location.created}}</p>
+            </div>
+        }
+    </div>
+}
