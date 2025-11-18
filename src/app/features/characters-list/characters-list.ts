@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectAll, selectError, selectIsLoading, selectNext, selectPages, selectPrev } from '../../shared/store/character/character.reducer';
+import { selectAll, selectError, selectFavoritesByIds, selectIsLoading, selectNext, selectPages, selectPrev } from '../../shared/store/character/character.reducer';
 import { loadCharacters } from '../../shared/store/character/character.action';
 import { AsyncPipe } from '@angular/common';
 import { first, Observable } from 'rxjs';
@@ -8,6 +8,7 @@ import { CharactersService } from '../../shared/services/characters.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { CharacterStatus } from '../../shared/models/character';
+import { FavoritesService } from '../../shared/services/favorites.service';
 
 @Component({
   selector: 'app-characters-list',
@@ -20,7 +21,9 @@ export class CharactersList implements OnInit {
   private store = inject(Store);
   private charactersService = inject(CharactersService);
   private destroyRef = inject(DestroyRef);
+  private favoritesService = inject(FavoritesService);
 
+  public favorites$ = this.store.select(selectFavoritesByIds(this.favoritesService.getFavorites()));
   public characters$ = this.store.select(selectAll);
   public isLoading$ = this.store.select(selectIsLoading);
   public prev$ = this.store.select(selectPrev);
@@ -65,5 +68,10 @@ export class CharactersList implements OnInit {
   public filterStatus(status: CharacterStatus) {
     this.filterSignal.set(status);
     this.loadPage();
+  }
+
+  public toggleFavorite(id: number) {
+    this.favoritesService.toggleFavorites(id);
+    this.favorites$ = this.store.select(selectFavoritesByIds(this.favoritesService.getFavorites()));
   }
 }

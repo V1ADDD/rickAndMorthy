@@ -1,7 +1,7 @@
 import { createFeature, createReducer, createSelector, on } from "@ngrx/store";
 import { CharactersState } from "./character.store";
 import { loadCharacters, loadCharactersFailure, loadCharactersSuccess } from "./character.action";
-import { createEntityAdapter } from "@ngrx/entity";
+import { createEntityAdapter, Dictionary } from "@ngrx/entity";
 import { Character } from "../../models/character";
 
 export const adapter = createEntityAdapter<Character>();
@@ -33,9 +33,23 @@ const charactersFeature = createFeature({
             error: error.error.error
         })),
     ),
-    extraSelectors: ({ selectCharactersState }) => ({
-        ...adapter.getSelectors(selectCharactersState)
-    })
+    extraSelectors: ({ selectCharactersState }) => {
+        const adapterSelectors = adapter.getSelectors(selectCharactersState);
+        
+        return {
+            ...adapterSelectors,
+            selectFavoritesByIds: (idList: number[]) => createSelector(
+                adapterSelectors.selectEntities,
+                (entities: Dictionary<Character>) => {
+                    return idList
+                        .map(id => entities[id])
+                        .filter((character): character is Character => 
+                            character !== undefined
+                        );
+                }
+            ),
+        };
+    }
 })
 
 export const {
@@ -46,5 +60,6 @@ export const {
     selectNext,
     selectPages,
     selectPrev,
-    selectError
+    selectError,
+    selectFavoritesByIds
 } = charactersFeature;

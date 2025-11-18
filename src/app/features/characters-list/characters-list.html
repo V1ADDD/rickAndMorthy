@@ -19,6 +19,10 @@
     <div class="container">
         @for (character of characters$ | async; track character.id) {
             <div class="character-info">
+                @if ((favorites$ | async)?.includes(character)) {
+                    <p style="color: green">Favorite</p>
+                }
+                <button (click)="toggleFavorite(character.id)">Toggle favorite</button>
                 <h2>{{character.name}}</h2>
                 <p>{{character.status}}</p>
                 <p>{{character.species}}</p>

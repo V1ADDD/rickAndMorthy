@@ -1,0 +1,21 @@
+@if (isLoading$ | async) {
+    загрузка...
+}
+@else {
+    <div class="container">
+        @for (favorite of favorites$ | async; track favorite.id) {
+            <div class="character-info">
+                <button (click)="toggleFavorite(favorite.id)">Toggle favorite</button>
+                <h2>{{favorite.name}}</h2>
+                <p>{{favorite.status}}</p>
+                <p>{{favorite.species}}</p>
+                <p>{{favorite.type}}</p>
+                <p>{{favorite.gender}}</p>
+                <p>{{favorite.origin.name}}</p>
+                <p>{{favorite.location.name}}</p>
+                <img [src]="favorite.image">
+                <p>{{favorite.created}}</p>
+            </div>
+        }
+    </div>
+}
