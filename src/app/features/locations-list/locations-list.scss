@@ -4,8 +4,14 @@
     flex-wrap: wrap;
     justify-content: space-around;
     row-gap: 24px;
+    margin-block: 24px;
     .location-info {
         border: 1px solid black;
         padding: 24px;
     }
+}
+.pagination {
+    margin-block: 24px;
+    display: flex;
+    justify-content: center;
 }

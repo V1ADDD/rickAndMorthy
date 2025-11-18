@@ -13,4 +13,10 @@
             </div>
         }
     </div>
+    <div class="pagination">
+        <button (click)="loadPage(1)" [disabled]="!(prev$ | async)">first</button>
+        <button (click)="loadPageUrl(prev$)" [disabled]="!(prev$ | async)">prev</button>
+        <button (click)="loadPageUrl(next$)" [disabled]="!(next$ | async)">next</button>
+        <button (click)="loadLastPage()" [disabled]="!(next$ | async)">last</button>
+    </div>
 }

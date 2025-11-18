@@ -25,7 +25,7 @@ const charactersFeature = createFeature({
             error: null
         })),
         on(loadCharactersSuccess, (state: CharactersState, { characters }) => {
-            return adapter.addMany(characters, { ...state, isLoading: false });
+            return adapter.setAll(characters.results, { ...state, ...characters.info, isLoading: false });
         }),
         on(loadCharactersFailure, (state: CharactersState, { error }) => ({
             ...state,
@@ -41,5 +41,9 @@ const charactersFeature = createFeature({
 export const {
     reducer: charactersReducer,
     selectIsLoading,
-    selectAll
+    selectAll,
+    selectCount,
+    selectNext,
+    selectPages,
+    selectPrev,
 } = charactersFeature;

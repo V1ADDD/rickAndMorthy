@@ -25,7 +25,7 @@ const locationsFeature = createFeature({
             error: null
         })),
         on(loadLocationsSuccess, (state: LocationsState, { locations }) => {
-            return adapter.addMany(locations, { ...state, isLoading: false });
+            return adapter.setAll(locations.results, { ...state, ...locations.info, isLoading: false });
         }),
         on(loadLocationsFailure, (state: LocationsState, { error }) => ({
             ...state,
@@ -41,5 +41,9 @@ const locationsFeature = createFeature({
 export const {
     reducer: locationsReducer,
     selectAll,
-    selectIsLoading
+    selectIsLoading,
+    selectPages,
+    selectCount,
+    selectNext,
+    selectPrev
 } = locationsFeature;

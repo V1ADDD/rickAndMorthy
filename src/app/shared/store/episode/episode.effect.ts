@@ -11,9 +11,9 @@ export class EpisodeEffects {
     public loadEpisodes$ = createEffect(() =>
         this.actions$.pipe(
         ofType(loadEpisodes),
-        mergeMap(() =>
-            this.episodesService.getEpisodes().pipe(
-                map((episodes) => loadEpisodesSuccess({ episodes: episodes.results })),
+        mergeMap(({currentPage}) =>
+            this.episodesService.getEpisodes(currentPage).pipe(
+                map((episodes) => loadEpisodesSuccess({ episodes: episodes })),
                 catchError((error) => of(loadEpisodesFailure({ 
                     error: error || 'Failed to load episodes' 
                 })))

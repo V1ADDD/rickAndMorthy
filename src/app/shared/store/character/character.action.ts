@@ -1,11 +1,14 @@
 import { createAction, props } from '@ngrx/store';
-import { Character } from '../../models/character';
+import { ResponseCharacters } from '../../models/character';
 
-export const loadCharacters = createAction('[Characters] Load Characters');
+export const loadCharacters = createAction(
+    '[Characters] Load Characters',
+    props<{ currentPage: number }>()
+);
 
 export const loadCharactersSuccess = createAction(
     '[Characters] Load Characters Success',
-    props<{ characters: Character[] }>()
+    props<{ characters: ResponseCharacters }>()
 )
 
 export const loadCharactersFailure = createAction(

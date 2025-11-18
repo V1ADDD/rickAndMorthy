@@ -1,11 +1,14 @@
 import { createAction, props } from '@ngrx/store';
-import { Episode } from '../../models/episode';
+import { ResponseEpisodes } from '../../models/episode';
 
-export const loadEpisodes = createAction('[Episodes] Load Episodes');
+export const loadEpisodes = createAction(
+    '[Episodes] Load Episodes',
+    props<{ currentPage: number }>()
+);
 
 export const loadEpisodesSuccess = createAction(
     '[Episodes] Load Episodes Success',
-    props<{ episodes: Episode[] }>()
+    props<{ episodes: ResponseEpisodes }>()
 )
 
 export const loadEpisodesFailure = createAction(

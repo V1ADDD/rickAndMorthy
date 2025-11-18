@@ -25,7 +25,7 @@ const episodesFeature = createFeature({
             error: null
         })),
         on(loadEpisodesSuccess, (state: EpisodesState, { episodes }) => {
-            return adapter.addMany(episodes, { ...state, isLoading: false });
+            return adapter.setAll(episodes.results, { ...state, ...episodes.info, isLoading: false });
         }),
         on(loadEpisodesFailure, (state: EpisodesState, { error }) => ({
             ...state,
@@ -41,5 +41,9 @@ const episodesFeature = createFeature({
 export const {
     reducer: episodesReducer,
     selectAll,
-    selectIsLoading
+    selectIsLoading,
+    selectPages,
+    selectNext,
+    selectCount,
+    selectPrev
 } = episodesFeature;

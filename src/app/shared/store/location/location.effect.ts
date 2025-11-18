@@ -11,9 +11,9 @@ export class LocationEffects {
     public loadLocations$ = createEffect(() =>
         this.actions$.pipe(
         ofType(loadLocations),
-        mergeMap(() =>
-            this.locationsService.getLocations().pipe(
-                map((locations) => loadLocationsSuccess({ locations: locations.results })),
+        mergeMap(({currentPage}) =>
+            this.locationsService.getLocations(currentPage).pipe(
+                map((locations) => loadLocationsSuccess({ locations: locations })),
                 catchError((error) => of(loadLocationsFailure({ 
                     error: error || 'Failed to load locations' 
                 })))

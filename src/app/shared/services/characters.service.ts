@@ -10,7 +10,13 @@ export class CharactersService {
   private http = inject(HttpClient);
   private readonly API_URL = 'https://rickandmortyapi.com/api/character';
 
-  public getCharacters(): Observable<ResponseCharacters> {
-    return this.http.get<ResponseCharacters>(this.API_URL);
+  public getCharacters(page: number): Observable<ResponseCharacters> {
+    return this.http.get<ResponseCharacters>(`${this.API_URL}/?page=${page}`);
+  }
+
+  public getPageFromUrl(url: string | null): number {
+    if (!url) return 1;
+    const match = url.match(/[?&]page=(\d+)/);
+    return match ? parseInt(match[1], 10) : 1;
   }
 }
