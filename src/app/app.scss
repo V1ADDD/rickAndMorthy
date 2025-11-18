@@ -1,0 +1,14 @@
+ul {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-direction: row;
+    list-style: none;
+    font-size: 18px;
+    li {
+        cursor: pointer;
+        &:hover {
+            color: blue;
+        }
+    }
+}

@@ -1,0 +1,11 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    row-gap: 24px;
+    .character-info {
+        border: 1px solid black;
+        padding: 24px;
+    }
+}
