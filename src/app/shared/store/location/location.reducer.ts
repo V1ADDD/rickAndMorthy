@@ -1,4 +1,4 @@
-import { createReducer, on } from "@ngrx/store";
+import { createFeature, createReducer, on } from "@ngrx/store";
 import { LocationsState } from "./location.store";
 import { loadLocations, loadLocationsFailure, loadLocationsSuccess } from "./location.action";
 import { createEntityAdapter } from "@ngrx/entity";
@@ -15,19 +15,31 @@ export const initialLocationsState: LocationsState = adapter.getInitialState({
   error: null
 });
 
-export const locationsReducer = createReducer(
-    initialLocationsState,
-    on(loadLocations, (state: LocationsState) => ({
-        ...state,
-        isLoading: true,
-        error: null
-    })),
-    on(loadLocationsSuccess, (state: LocationsState, { locations }) => {
-        return adapter.addMany(locations, { ...state, isLoading: false });
-    }),
-    on(loadLocationsFailure, (state: LocationsState, { error }) => ({
-        ...state,
-        isLoading: false,
-        error: error
-    })),
-)
+const locationsFeature = createFeature({
+    name: 'locations',
+    reducer: createReducer(
+        initialLocationsState,
+        on(loadLocations, (state: LocationsState) => ({
+            ...state,
+            isLoading: true,
+            error: null
+        })),
+        on(loadLocationsSuccess, (state: LocationsState, { locations }) => {
+            return adapter.addMany(locations, { ...state, isLoading: false });
+        }),
+        on(loadLocationsFailure, (state: LocationsState, { error }) => ({
+            ...state,
+            isLoading: false,
+            error: error
+        })),
+    ),
+    extraSelectors: ({ selectLocationsState }) => ({
+        ...adapter.getSelectors(selectLocationsState)
+    })
+})
+
+export const {
+    reducer: locationsReducer,
+    selectAll,
+    selectIsLoading
+} = locationsFeature;

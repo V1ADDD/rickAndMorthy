@@ -1,4 +1,4 @@
-import { createReducer, on } from "@ngrx/store";
+import { createFeature, createReducer, on } from "@ngrx/store";
 import { EpisodesState } from "./episode.store";
 import { loadEpisodes, loadEpisodesFailure, loadEpisodesSuccess } from "./episode.action";
 import { Episode } from "../../models/episode";
@@ -15,19 +15,31 @@ export const initialEpisodesState: EpisodesState = adapter.getInitialState({
   error: null
 });
 
-export const episodesReducer = createReducer(
-    initialEpisodesState,
-    on(loadEpisodes, (state: EpisodesState) => ({
-        ...state,
-        isLoading: true,
-        error: null
-    })),
-    on(loadEpisodesSuccess, (state: EpisodesState, { episodes }) => {
-        return adapter.addMany(episodes, { ...state, isLoading: false });
-    }),
-    on(loadEpisodesFailure, (state: EpisodesState, { error }) => ({
-        ...state,
-        isLoading: false,
-        error: error
-    })),
-)
+const episodesFeature = createFeature({
+    name: 'episodes',
+    reducer: createReducer(
+        initialEpisodesState,
+        on(loadEpisodes, (state: EpisodesState) => ({
+            ...state,
+            isLoading: true,
+            error: null
+        })),
+        on(loadEpisodesSuccess, (state: EpisodesState, { episodes }) => {
+            return adapter.addMany(episodes, { ...state, isLoading: false });
+        }),
+        on(loadEpisodesFailure, (state: EpisodesState, { error }) => ({
+            ...state,
+            isLoading: false,
+            error: error
+        })),
+    ),
+    extraSelectors: ({ selectEpisodesState }) => ({
+        ...adapter.getSelectors(selectEpisodesState)
+    })
+})
+
+export const {
+    reducer: episodesReducer,
+    selectAll,
+    selectIsLoading
+} = episodesFeature;

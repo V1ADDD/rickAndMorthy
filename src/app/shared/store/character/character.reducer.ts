@@ -1,4 +1,4 @@
-import { createReducer, on } from "@ngrx/store";
+import { createFeature, createReducer, createSelector, on } from "@ngrx/store";
 import { CharactersState } from "./character.store";
 import { loadCharacters, loadCharactersFailure, loadCharactersSuccess } from "./character.action";
 import { createEntityAdapter } from "@ngrx/entity";
@@ -15,19 +15,31 @@ export const initialCharactersState: CharactersState = adapter.getInitialState({
   error: null
 });
 
-export const charactersReducer = createReducer(
-    initialCharactersState,
-    on(loadCharacters, (state: CharactersState) => ({
-        ...state,
-        isLoading: true,
-        error: null
-    })),
-    on(loadCharactersSuccess, (state: CharactersState, { characters }) => {
-        return adapter.addMany(characters, { ...state, isLoading: false });
-    }),
-    on(loadCharactersFailure, (state: CharactersState, { error }) => ({
-        ...state,
-        isLoading: false,
-        error: error
-    })),
-)
+const charactersFeature = createFeature({
+    name: 'characters',
+    reducer: createReducer(
+        initialCharactersState,
+        on(loadCharacters, (state: CharactersState) => ({
+            ...state,
+            isLoading: true,
+            error: null
+        })),
+        on(loadCharactersSuccess, (state: CharactersState, { characters }) => {
+            return adapter.addMany(characters, { ...state, isLoading: false });
+        }),
+        on(loadCharactersFailure, (state: CharactersState, { error }) => ({
+            ...state,
+            isLoading: false,
+            error: error
+        })),
+    ),
+    extraSelectors: ({ selectCharactersState }) => ({
+        ...adapter.getSelectors(selectCharactersState)
+    })
+})
+
+export const {
+    reducer: charactersReducer,
+    selectIsLoading,
+    selectAll
+} = charactersFeature;

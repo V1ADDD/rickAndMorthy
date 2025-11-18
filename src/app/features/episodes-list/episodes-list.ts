@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectAllEpisodes, selectEpisodesIsLoading } from '../../shared/store/episode/episode.selectors';
+import { selectAll, selectIsLoading } from '../../shared/store/episode/episode.reducer';
 import { loadEpisodes } from '../../shared/store/episode/episode.action';
 
 @Component({
@@ -14,8 +14,8 @@ import { loadEpisodes } from '../../shared/store/episode/episode.action';
 export class EpisodesList {
   private store = inject(Store);
 
-  public episodes$ = this.store.select(selectAllEpisodes);
-  public isLoading$ = this.store.select(selectEpisodesIsLoading);
+  public episodes$ = this.store.select(selectAll);
+  public isLoading$ = this.store.select(selectIsLoading);
 
   public ngOnInit(): void { 
     this.store.dispatch(loadEpisodes());
