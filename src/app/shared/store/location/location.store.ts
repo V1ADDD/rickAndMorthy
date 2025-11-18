@@ -1,7 +1,7 @@
+import { EntityState } from "@ngrx/entity";
 import { Location } from "../../models/location";
 
-export interface LocationsState {
-  locations: Location[];
+export interface LocationsState extends EntityState<Location> {
   isLoading: boolean;
   count: number;
   pages: number;
@@ -9,13 +9,3 @@ export interface LocationsState {
   prev: string | null;
   error: string | null;
 }
-
-export const initialLocationsState: LocationsState = {
-  locations: [],
-  isLoading: false,
-  count: 0,
-  pages: 0,
-  next: null,
-  prev: null,
-  error: null
-};

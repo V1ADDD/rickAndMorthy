@@ -1,12 +1,13 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { CharactersState } from "./character.store";
+import { adapter } from "./character.reducer";
 
 
 export const selectTasksState = createFeatureSelector<CharactersState>('characters');
 
 export const selectAllCharacters = createSelector(
   selectTasksState,
-  (state: CharactersState) => state.characters
+  adapter.getSelectors().selectAll
 );
 
 export const selectCharactersIsLoading = createSelector(

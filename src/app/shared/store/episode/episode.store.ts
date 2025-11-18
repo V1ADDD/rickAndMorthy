@@ -1,7 +1,7 @@
 import { Episode } from "../../models/episode";
+import { EntityState } from "@ngrx/entity";
 
-export interface EpisodesState {
-  episodes: Episode[];
+export interface EpisodesState extends EntityState<Episode> {
   isLoading: boolean;
   count: number;
   pages: number;
@@ -9,13 +9,3 @@ export interface EpisodesState {
   prev: string | null;
   error: string | null;
 }
-
-export const initialEpisodesState: EpisodesState = {
-  episodes: [],
-  isLoading: false,
-  count: 0,
-  pages: 0,
-  next: null,
-  prev: null,
-  error: null
-};

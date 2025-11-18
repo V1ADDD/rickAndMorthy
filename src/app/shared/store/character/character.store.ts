@@ -1,7 +1,7 @@
 import { Character } from "../../models/character";
+import { EntityState } from "@ngrx/entity";
 
-export interface CharactersState {
-  characters: Character[];
+export interface CharactersState extends EntityState<Character> {
   isLoading: boolean;
   count: number;
   pages: number;
@@ -9,13 +9,3 @@ export interface CharactersState {
   prev: string | null;
   error: string | null;
 }
-
-export const initialCharactersState: CharactersState = {
-  characters: [],
-  isLoading: false,
-  count: 0,
-  pages: 0,
-  next: null,
-  prev: null,
-  error: null
-};

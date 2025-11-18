@@ -1,12 +1,13 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { LocationsState } from "./location.store";
+import { adapter } from "./location.reducer";
 
 
 export const selectLocationsState = createFeatureSelector<LocationsState>('locations');
 
 export const selectAllLocations = createSelector(
   selectLocationsState,
-  (state: LocationsState) => state.locations
+  adapter.getSelectors().selectAll
 );
 export const selectLocationsIsLoading = createSelector(
   selectLocationsState,

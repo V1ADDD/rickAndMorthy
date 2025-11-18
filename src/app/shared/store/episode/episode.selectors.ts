@@ -1,12 +1,13 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { EpisodesState } from "./episode.store";
+import { adapter } from "./episode.reducer";
 
 
 export const selectEpisodesState = createFeatureSelector<EpisodesState>('episodes');
 
 export const selectAllEpisodes = createSelector(
   selectEpisodesState,
-  (state: EpisodesState) => state.episodes
+  adapter.getSelectors().selectAll
 );
 export const selectEpisodesIsLoading = createSelector(
   selectEpisodesState,
