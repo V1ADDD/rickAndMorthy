@@ -1,9 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { ResponseCharacters } from '../../models/character';
+import { CharacterStatus, ResponseCharacters } from '../../models/character';
+import { ResponseError } from '../../models/error';
 
 export const loadCharacters = createAction(
     '[Characters] Load Characters',
-    props<{ currentPage: number }>()
+    props<{ currentPage: number, search: string, filter: CharacterStatus }>()
 );
 
 export const loadCharactersSuccess = createAction(
@@ -13,5 +14,5 @@ export const loadCharactersSuccess = createAction(
 
 export const loadCharactersFailure = createAction(
     '[Characters] Load Characters Failure',
-    props<{ error: string }>()
+    props<{ error: ResponseError }>()
 )

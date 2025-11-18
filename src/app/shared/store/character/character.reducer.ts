@@ -30,7 +30,7 @@ const charactersFeature = createFeature({
         on(loadCharactersFailure, (state: CharactersState, { error }) => ({
             ...state,
             isLoading: false,
-            error: error
+            error: error.error.error
         })),
     ),
     extraSelectors: ({ selectCharactersState }) => ({
@@ -46,4 +46,5 @@ export const {
     selectNext,
     selectPages,
     selectPrev,
+    selectError
 } = charactersFeature;

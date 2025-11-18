@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectAll, selectIsLoading, selectNext, selectPages, selectPrev } from '../../shared/store/character/character.reducer';
+import { selectAll, selectError, selectIsLoading, selectNext, selectPages, selectPrev } from '../../shared/store/character/character.reducer';
 import { loadCharacters } from '../../shared/store/character/character.action';
 import { AsyncPipe } from '@angular/common';
 import { first, Observable } from 'rxjs';
 import { CharactersService } from '../../shared/services/characters.service';
-import { ResponseCharacters } from '../../shared/models/character';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { CharacterStatus } from '../../shared/models/character';
 
 @Component({
   selector: 'app-characters-list',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, FormsModule],
   templateUrl: './characters-list.html',
   styleUrl: './characters-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -25,13 +26,17 @@ export class CharactersList implements OnInit {
   public prev$ = this.store.select(selectPrev);
   public next$ = this.store.select(selectNext);
   public pages$ = this.store.select(selectPages);
+  public error$ = this.store.select(selectError);
+
+  public searchSignal = signal('');
+  public filterSignal = signal<CharacterStatus>('');
 
   public ngOnInit(): void { 
-    this.loadPage(1);
+    this.loadPage();
   }
 
-  public loadPage(page: number): void {
-    this.store.dispatch(loadCharacters({ currentPage: page }));
+  public loadPage(page: number = 1): void {
+    this.store.dispatch(loadCharacters({ currentPage: page, search: this.searchSignal(), filter: this.filterSignal() }));
   }
   
   public loadPageUrl(page: Observable<string | null>): void {
@@ -55,5 +60,10 @@ export class CharactersList implements OnInit {
         this.loadPage(pageCount);
       }
     )
+  }
+
+  public filterStatus(status: CharacterStatus) {
+    this.filterSignal.set(status);
+    this.loadPage();
   }
 }

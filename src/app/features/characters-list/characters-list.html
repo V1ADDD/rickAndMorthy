@@ -2,6 +2,20 @@
     загрузка...
 }
 @else {
+    <form (submit)="loadPage()">
+        <label for="search">Find character:</label>
+        <input id="search" name="search" [(ngModel)]="searchSignal">
+    </form>
+    <div class="filter">
+        <button (click)="filterStatus('')">All</button>
+        <button (click)="filterStatus('Alive')">Alive</button>
+        <button (click)="filterStatus('Dead')">Dead</button>
+        <button (click)="filterStatus('unknown')">unknown</button>
+    </div>
+    @if (error$ | async) {
+        <p style="color: red">{{ error$ | async }}</p>
+    }
+    
     <div class="container">
         @for (character of characters$ | async; track character.id) {
             <div class="character-info">
@@ -18,7 +32,7 @@
         }
     </div>
     <div class="pagination">
-        <button (click)="loadPage(1)" [disabled]="!(prev$ | async)">first</button>
+        <button (click)="loadPage()" [disabled]="!(prev$ | async)">first</button>
         <button (click)="loadPageUrl(prev$)" [disabled]="!(prev$ | async)">prev</button>
         <button (click)="loadPageUrl(next$)" [disabled]="!(next$ | async)">next</button>
         <button (click)="loadLastPage()" [disabled]="!(next$ | async)">last</button>

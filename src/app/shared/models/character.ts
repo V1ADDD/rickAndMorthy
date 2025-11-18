@@ -1,7 +1,7 @@
 export interface Character {
     id: number;
     name: string;
-    status: string;
+    status: CharacterStatus;
     species: string;
     type: string;
     gender: "Male" | "Female" | "Genderless" | "unknown";
@@ -18,6 +18,8 @@ export interface Character {
     url: string;
     created: string;
 }
+
+export type CharacterStatus =  "Alive" | "Dead" | "unknown" | "";
 
 export interface ResponseCharacters {
     info: {

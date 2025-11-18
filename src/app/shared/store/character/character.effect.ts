@@ -12,8 +12,8 @@ export class CharacterEffects {
     public loadCharacters$ = createEffect(() =>
         this.actions$.pipe(
         ofType(loadCharacters),
-        mergeMap(({currentPage}) =>
-            this.charactersService.getCharacters(currentPage).pipe(
+        mergeMap(({currentPage, search, filter}) =>
+            this.charactersService.getCharacters(currentPage, search, filter).pipe(
                 map((characters) => loadCharactersSuccess({ characters: characters })),
                 catchError((error) => of(loadCharactersFailure({ 
                     error: error || 'Failed to load characters' 
