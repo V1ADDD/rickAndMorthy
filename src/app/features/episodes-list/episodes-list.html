@@ -1,0 +1,17 @@
+<p>episodes-list works!</p>
+@if (isLoading$ | async) {
+    загрузка...
+}
+@else {
+    <div class="container">
+        @for (episode of episodes$ | async; track episode.id) {
+            <div class="episode-info">
+                <h2>{{episode.name}}</h2>
+                <p>{{episode.air_date}}</p>
+                <p>{{episode.episode}}</p>
+                <p>{{episode.characters}}</p>
+                <p>{{episode.created}}</p>
+            </div>
+        }
+    </div>
+}
