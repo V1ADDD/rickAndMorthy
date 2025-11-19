@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, mergeMap, of } from "rxjs";
 import { loadEpisodes, loadEpisodesFailure, loadEpisodesSuccess } from "./episode.action";
 import { EpisodesService } from "../../services/episodes.service";
+import { ResponseError } from "../../models/error";
 
 @Injectable()
 export class EpisodeEffects {
@@ -14,8 +15,8 @@ export class EpisodeEffects {
         mergeMap(({currentPage}) =>
             this.episodesService.getEpisodes(currentPage).pipe(
                 map((episodes) => loadEpisodesSuccess({ episodes: episodes })),
-                catchError((error) => of(loadEpisodesFailure({ 
-                    error: error || 'Failed to load episodes' 
+                catchError((error: ResponseError) => of(loadEpisodesFailure({ 
+                    error: error 
                 })))
             )
         )

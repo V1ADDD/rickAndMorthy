@@ -50,7 +50,7 @@ const charactersFeature = createFeature({
             ),
         };
     }
-})
+});
 
 export const {
     reducer: charactersReducer,

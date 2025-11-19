@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { ResponseEpisodes } from '../../models/episode';
+import { ResponseError } from '../../models/error';
 
 export const loadEpisodes = createAction(
     '[Episodes] Load Episodes',
@@ -13,5 +14,5 @@ export const loadEpisodesSuccess = createAction(
 
 export const loadEpisodesFailure = createAction(
     '[Episodes] Load Episodes Failure',
-    props<{ error: string }>()
+    props<{ error: ResponseError }>()
 )

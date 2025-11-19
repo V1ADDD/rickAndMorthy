@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, mergeMap, of } from "rxjs";
 import { loadLocations, loadLocationsFailure, loadLocationsSuccess } from "./location.action";
 import { LocationsService } from "../../services/locations.service";
+import { ResponseError } from "../../models/error";
 
 @Injectable()
 export class LocationEffects {
@@ -14,8 +15,8 @@ export class LocationEffects {
         mergeMap(({currentPage}) =>
             this.locationsService.getLocations(currentPage).pipe(
                 map((locations) => loadLocationsSuccess({ locations: locations })),
-                catchError((error) => of(loadLocationsFailure({ 
-                    error: error || 'Failed to load locations' 
+                catchError((error: ResponseError) => of(loadLocationsFailure({ 
+                    error: error
                 })))
             )
         )

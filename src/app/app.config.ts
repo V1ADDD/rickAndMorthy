@@ -12,6 +12,8 @@ import { LocationEffects } from './shared/store/location/location.effect';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { episodesReducer } from './shared/store/episode/episode.reducer';
 import { EpisodeEffects } from './shared/store/episode/episode.effect';
+import { favoritesReducer } from './shared/store/favorites/favorites.reducer';
+import { FavoritesEffects } from './shared/store/favorites/favorites.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,11 +21,12 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideStore({ 
+      favorites: favoritesReducer,
       characters: charactersReducer,
       locations: locationsReducer,
       episodes: episodesReducer
     }),
-    provideEffects([CharacterEffects, LocationEffects, EpisodeEffects]),
+    provideEffects([CharacterEffects, LocationEffects, EpisodeEffects, FavoritesEffects]),
     provideHttpClient(),
     provideStoreDevtools({
       maxAge: 25,

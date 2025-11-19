@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { FavoritesService } from '../../shared/services/favorites.service';
 import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { selectAll, selectFavoritesByIds, selectIsLoading } from '../../shared/store/character/character.reducer';
-import { loadCharacters } from '../../shared/store/character/character.action';
+import { selectAllFavorites, selectErrorFavorites, selectIsLoadingFavorites } from '../../shared/store/favorites/favorites.reducer';
+import { loadFavorites } from '../../shared/store/favorites/favorites.action';
 
 @Component({
   selector: 'app-favorites-list',
@@ -16,11 +16,12 @@ export class FavoritesList implements OnInit {
   private favoritesService = inject(FavoritesService);
   private store = inject(Store);
 
-  public favorites$ = this.store.select(selectFavoritesByIds(this.favoritesService.getFavorites()));
-  public isLoading$ = this.store.select(selectIsLoading);
+  public favorites$ = this.store.select(selectAllFavorites);
+  public isLoading$ = this.store.select(selectIsLoadingFavorites);
+  public error$ = this.store.select(selectErrorFavorites);
 
   public ngOnInit(): void {
-    this.store.dispatch(loadCharacters({ currentPage: 1, search: '', filter: '' }));
+    this.store.dispatch(loadFavorites({ ids: this.favoritesService.getFavorites() }));
   }
 
   public toggleFavorite(id: number) {

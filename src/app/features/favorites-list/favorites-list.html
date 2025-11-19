@@ -2,6 +2,9 @@
     загрузка...
 }
 @else {
+    @if (error$ | async) {
+        <p style="color: red">{{ error$ | async }}</p>
+    }
     <div class="container">
         @for (favorite of favorites$ | async; track favorite.id) {
             <div class="character-info">

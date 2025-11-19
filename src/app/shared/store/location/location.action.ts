@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { ResponseLocations } from '../../models/location';
+import { ResponseError } from '../../models/error';
 
 export const loadLocations = createAction(
     '[Locations] Load Locations',
@@ -13,5 +14,5 @@ export const loadLocationsSuccess = createAction(
 
 export const loadLocationsFailure = createAction(
     '[Locations] Load Locations Failure',
-    props<{ error: string }>()
+    props<{ error: ResponseError }>()
 )

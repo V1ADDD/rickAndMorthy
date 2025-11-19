@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CharacterStatus, ResponseCharacters } from '../../models/character';
+import { Character, CharacterStatus, ResponseCharacters } from '../../models/character';
 import { ResponseError } from '../../models/error';
 
 export const loadCharacters = createAction(

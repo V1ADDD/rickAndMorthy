@@ -1,5 +1,6 @@
 import { EntityState } from "@ngrx/entity";
 import { Location } from "../../models/location";
+import { ResponseError } from "../../models/error";
 
 export interface LocationsState extends EntityState<Location> {
   isLoading: boolean;
@@ -7,5 +8,5 @@ export interface LocationsState extends EntityState<Location> {
   pages: number;
   next: string | null;
   prev: string | null;
-  error: string | null;
+  error: ResponseError | null;
 }
