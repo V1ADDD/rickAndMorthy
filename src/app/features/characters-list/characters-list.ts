@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectAll, selectCurrentCount, selectError, selectFavoritesByIds, selectIsLoading, selectNext } from '../../shared/store/character/character.reducer';
-import { addCharacters } from '../../shared/store/character/character.action';
+import { addCharacters, resetCharacters } from '../../shared/store/character/character.action';
 import { AsyncPipe } from '@angular/common';
 import { first, Observable } from 'rxjs';
 import { CharactersService } from '../../shared/services/characters.service';
@@ -59,17 +59,25 @@ export class CharactersList implements OnInit {
     )
   }
 
-  public filterStatus(status: CharacterStatus) {
+  public filterStatus(status: CharacterStatus): void {
     this.filterSignal.set(status);
+    this.store.dispatch(resetCharacters());
+    this.curIndex.set(0);
     this.loadPage();
   }
 
-  public toggleFavorite(id: number) {
+  public searchCharacter(): void {
+    this.store.dispatch(resetCharacters());
+    this.curIndex.set(0);
+    this.loadPage();
+  }
+
+  public toggleFavorite(id: number): void {
     this.favoritesService.toggleFavorites(id);
     this.favorites$ = this.store.select(selectFavoritesByIds(this.favoritesService.getFavorites()));
   }
 
-  public onScroll(index: number) {
+  public onScroll(index: number): void {
     // если последняя то ничего не делаем
     if (this.isLastPage()) return;
     // фикс для того что инногда при обновлении состояния у меня скролл откатывался в 0

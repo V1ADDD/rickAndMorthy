@@ -1,6 +1,6 @@
 import { createFeature, createReducer, createSelector, on } from "@ngrx/store";
 import { CharactersState } from "./character.store";
-import { addCharacters, addCharactersFailure, addCharactersSuccess } from "./character.action";
+import { addCharacters, addCharactersFailure, addCharactersSuccess, resetCharacters } from "./character.action";
 import { createEntityAdapter, Dictionary } from "@ngrx/entity";
 import { Character } from "../../models/character";
 
@@ -24,6 +24,7 @@ const charactersFeature = createFeature({
             isLoading: true,
             error: null
         })),
+        on(resetCharacters, () => (initialCharactersState)),
         on(addCharactersSuccess, (state: CharactersState, { characters }) => {
             return adapter.upsertMany(characters.results, { ...state, ...characters.info, isLoading: false });
         }),

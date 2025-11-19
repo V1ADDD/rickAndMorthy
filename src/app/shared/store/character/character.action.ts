@@ -7,6 +7,10 @@ export const addCharacters = createAction(
     props<{ currentPage: number, search: string, filter: CharacterStatus }>()
 );
 
+export const resetCharacters = createAction(
+    '[Characters] Reset Characters'
+);
+
 export const addCharactersSuccess = createAction(
     '[Characters] Add Characters Success',
     props<{ characters: ResponseCharacters }>()
