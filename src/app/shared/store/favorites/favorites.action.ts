@@ -16,3 +16,8 @@ export const loadFavoritesFailure = createAction(
     '[Favorites] Load Favorites Failure',
     props<{ error: ResponseError }>()
 )
+
+export const toggleFavorite = createAction(
+    '[Favorites] Toggle Favorite',
+    props<{ toggleId: number}>()
+)

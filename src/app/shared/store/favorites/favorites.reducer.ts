@@ -2,7 +2,7 @@ import { createEntityAdapter } from "@ngrx/entity";
 import { Character } from "../../models/character";
 import { FavoritesState } from "./favorites.store";
 import { createFeature, createReducer, on } from "@ngrx/store";
-import { loadFavorites, loadFavoritesFailure, loadFavoritesSuccess } from "./favorites.action";
+import { loadFavorites, loadFavoritesFailure, loadFavoritesSuccess, toggleFavorite } from "./favorites.action";
 
 export const adapter = createEntityAdapter<Character>();
 
@@ -28,6 +28,9 @@ const favoritesFeature = createFeature({
             isLoading: false,
             error: error.error.error
         })),
+        on(toggleFavorite, (state: FavoritesState, { toggleId }) => {
+            return adapter.removeOne(toggleId, state);
+        })
     ),
     extraSelectors: ({ selectFavoritesState }) => ({
         ...adapter.getSelectors(selectFavoritesState)

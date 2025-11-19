@@ -3,7 +3,7 @@ import { FavoritesService } from '../../shared/services/favorites.service';
 import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { selectAllFavorites, selectErrorFavorites, selectIsLoadingFavorites } from '../../shared/store/favorites/favorites.reducer';
-import { loadFavorites } from '../../shared/store/favorites/favorites.action';
+import { loadFavorites, toggleFavorite } from '../../shared/store/favorites/favorites.action';
 
 @Component({
   selector: 'app-favorites-list',
@@ -26,5 +26,6 @@ export class FavoritesList implements OnInit {
 
   public toggleFavorite(id: number) {
     this.favoritesService.toggleFavorites(id);
+    this.store.dispatch(toggleFavorite({ toggleId: id }));
   }
 }
