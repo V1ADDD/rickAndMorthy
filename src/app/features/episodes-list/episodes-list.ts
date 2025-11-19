@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectAll, selectIsLoading, selectNext, selectPages, selectPrev } from '../../shared/store/episode/episode.reducer';
@@ -9,7 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-episodes-list',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, DatePipe],
   templateUrl: './episodes-list.html',
   styleUrl: './episodes-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

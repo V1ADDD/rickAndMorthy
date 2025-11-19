@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal,
 import { Store } from '@ngrx/store';
 import { selectAll, selectCurrentCount, selectError, selectFavoritesByIds, selectIsLoading, selectNext } from '../../shared/store/character/character.reducer';
 import { addCharacters, resetCharacters } from '../../shared/store/character/character.action';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { first, Observable } from 'rxjs';
 import { CharactersService } from '../../shared/services/characters.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -13,7 +13,7 @@ import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrollin
 
 @Component({
   selector: 'app-characters-list',
-  imports: [AsyncPipe, FormsModule, ScrollingModule],
+  imports: [AsyncPipe, FormsModule, ScrollingModule, DatePipe],
   templateUrl: './characters-list.html',
   styleUrl: './characters-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -39,6 +39,7 @@ export class CharactersList implements OnInit {
   public filterSignal = signal<CharacterStatus>('');
 
   public ngOnInit(): void { 
+    this.store.dispatch(resetCharacters())
     this.loadPage();
   }
 

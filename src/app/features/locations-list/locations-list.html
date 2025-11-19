@@ -1,15 +1,16 @@
-<p>locations-list works!</p>
+<h1>Locations</h1>
+
 @if (isLoading$ | async) {
-    загрузка...
+    <p>Загрузка...</p>
 }
 @else {
     <div class="container">
         @for (location of locations$ | async; track $index) {
             <div class="location-info">
                 <h2>{{location.name}}</h2>
-                <p>{{location.type}}</p>
-                <p>{{location.dimension}}</p>
-                <p>{{location.created}}</p>
+                <p>Type: {{location.type}}</p>
+                <p>Dimension: {{location.dimension}}</p>
+                <p>Created: {{location.created | date: 'short'}}</p>
             </div>
         }
     </div>

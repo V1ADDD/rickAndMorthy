@@ -1,9 +1,9 @@
 <header>
     <ul>
-        <li [routerLink]="'/characters'">characters</li>
-        <li [routerLink]="'/favorites'">favorites</li>
-        <li [routerLink]="'/locations'">locations</li>
-        <li [routerLink]="'/episodes'">episodes</li>
+        <li [routerLink]="'/characters'" [class.active]="isActive('/characters')">Characters</li>
+        <li [routerLink]="'/favorites'" [class.active]="isActive('/favorites')">Favorites</li>
+        <li [routerLink]="'/locations'" [class.active]="isActive('/locations')">Locations</li>
+        <li [routerLink]="'/episodes'" [class.active]="isActive('/episodes')">Episodes</li>
     </ul>
     <hr>
 </header>

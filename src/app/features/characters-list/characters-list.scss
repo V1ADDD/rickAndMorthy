@@ -1,17 +1,131 @@
+h1 {
+  margin: 20px;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.4;
+}
+
+p {
+  margin: 20px;
+}
+
 .viewport {
-    margin-block: 24px;
-    height: 750px;
-    width: 100%;
-    .container {
-        display: flex;
-        flex-direction: row;
-        gap: 24px;
-        .character-info {
-            border: 1px solid black;
-            padding: 24px;
-            height: 680px;
-            width: 300px;
+  margin: 24px;
+  height: 600px;
+  width: calc(100% - 48px);
+  
+  .container {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    
+    .character-info {
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 20px;
+      height: auto;
+      width: 300px;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      
+      h2 {
+        margin: 0 0 16px 0;
+        font-size: 1.25rem;
+        font-weight: 300;
+        color: #333;
+        line-height: 1.4;
+      }
+      
+      img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 16px;
+      }
+      
+      button {
+        width: 100%;
+        padding: 10px 16px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-bottom: 12px;
+        
+        &:hover {
+          background: #e8e8e8;
+          border-color: #ccc;
         }
+      }
+      
+      p {
+        margin: 6px 0;
+        font-size: 0.875rem;
+        color: #666;
+        line-height: 1.4;
+      }
+
+      .favorite {
+        color: #10b981;
+        font-weight: 500;
+        margin: 8px 0;
+      }
+    }
+  }
+}
+
+form {
+  margin: 20px;
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  input {
+    width: 300px;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.875rem;
+  }
+}
+
+.filter {
+  margin: 20px;
+  display: flex;
+  gap: 8px;
+  
+  button {
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: #f5f5f5;
+      border-color: #ccc;
     }
     
+    &.active {
+      background: #e8e8e8;
+    }
+  }
+}
+
+.error {
+  color: #ef4444;
+  background: #fef2f2;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border-left: 4px solid #ef4444;
+  margin: 16px 20px;
 }

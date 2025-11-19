@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectAll, selectIsLoading, selectNext, selectPages, selectPrev } from '../../shared/store/location/location.reducer';
@@ -9,7 +9,7 @@ import { LocationsService } from '../../shared/services/locations.service';
 
 @Component({
   selector: 'app-locations-list',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, DatePipe],
   templateUrl: './locations-list.html',
   styleUrl: './locations-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

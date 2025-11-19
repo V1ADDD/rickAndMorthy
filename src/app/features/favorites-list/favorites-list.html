@@ -1,24 +1,31 @@
+<h1>Favorite Characters</h1>
 @if (isLoading$ | async) {
-    загрузка...
+    <p>Загрузка...</p>
 }
 @else {
     @if (error$ | async) {
-        <p style="color: red">{{ error$ | async }}</p>
+        <p class="error">{{ error$ | async }}</p>
     }
-    <div class="container">
-        @for (favorite of favorites$ | async; track favorite.id) {
-            <div class="character-info">
-                <button (click)="toggleFavorite(favorite.id)">Toggle favorite</button>
-                <h2>{{favorite.name}}</h2>
-                <p>{{favorite.status}}</p>
-                <p>{{favorite.species}}</p>
-                <p>{{favorite.type}}</p>
-                <p>{{favorite.gender}}</p>
-                <p>{{favorite.origin.name}}</p>
-                <p>{{favorite.location.name}}</p>
-                <img [src]="favorite.image">
-                <p>{{favorite.created}}</p>
+    <cdk-virtual-scroll-viewport 
+        itemSize="300" 
+        orientation="horizontal" 
+        class="viewport">
+        <div class="container">
+            <div *cdkVirtualFor="let character of favorites$ | async" class="character-info">
+                <h2>{{character.name}}</h2>
+                <img [src]="character.image">
+                <button (click)="toggleFavorite(character.id)">Toggle favorite</button>
+                @if ((favorites$ | async)?.includes(character)) {
+                    <p class="favorite">Favorite</p>
+                }
+                <p>Status: {{character.status}}</p>
+                <p>Species: {{character.species}}</p>
+                <p>{{character.type}}</p>
+                <p>Gender: {{character.gender}}</p>
+                <p>Origin: {{character.origin.name}}</p>
+                <p>Location: {{character.location.name}}</p>
+                <p>Created: {{character.created | date: 'short'}}</p>
             </div>
-        }
-    </div>
+        </div>
+    </cdk-virtual-scroll-viewport>
 }
