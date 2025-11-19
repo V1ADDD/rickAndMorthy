@@ -1,17 +1,17 @@
-.container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    row-gap: 24px;
+.viewport {
     margin-block: 24px;
-    .character-info {
-        border: 1px solid black;
-        padding: 24px;
+    height: 750px;
+    width: 100%;
+    .container {
+        display: flex;
+        flex-direction: row;
+        gap: 24px;
+        .character-info {
+            border: 1px solid black;
+            padding: 24px;
+            height: 680px;
+            width: 300px;
+        }
     }
-}
-.pagination {
-    margin-block: 24px;
-    display: flex;
-    justify-content: center;
+    
 }

@@ -16,29 +16,27 @@
         <p style="color: red">{{ error$ | async }}</p>
     }
     
-    <div class="container">
-        @for (character of characters$ | async; track character.id) {
-            <div class="character-info">
+    <cdk-virtual-scroll-viewport 
+        itemSize="300" 
+        orientation="horizontal" 
+        class="viewport"
+        (scrolledIndexChange)="onScroll($event)">
+        <div class="container">
+            <div *cdkVirtualFor="let character of characters$ | async" class="character-info">
+                <h2>{{character.name}}</h2>
+                <img [src]="character.image">
+                <button (click)="toggleFavorite(character.id)">Toggle favorite</button>
                 @if ((favorites$ | async)?.includes(character)) {
                     <p style="color: green">Favorite</p>
                 }
-                <button (click)="toggleFavorite(character.id)">Toggle favorite</button>
-                <h2>{{character.name}}</h2>
                 <p>{{character.status}}</p>
                 <p>{{character.species}}</p>
                 <p>{{character.type}}</p>
                 <p>{{character.gender}}</p>
                 <p>{{character.origin.name}}</p>
                 <p>{{character.location.name}}</p>
-                <img [src]="character.image">
                 <p>{{character.created}}</p>
             </div>
-        }
-    </div>
-    <div class="pagination">
-        <button (click)="loadPage()" [disabled]="!(prev$ | async)">first</button>
-        <button (click)="loadPageUrl(prev$)" [disabled]="!(prev$ | async)">prev</button>
-        <button (click)="loadPageUrl(next$)" [disabled]="!(next$ | async)">next</button>
-        <button (click)="loadLastPage()" [disabled]="!(next$ | async)">last</button>
-    </div>
+        </div>
+    </cdk-virtual-scroll-viewport>
 }

@@ -1,6 +1,6 @@
 import { createFeature, createReducer, createSelector, on } from "@ngrx/store";
 import { CharactersState } from "./character.store";
-import { loadCharacters, loadCharactersFailure, loadCharactersSuccess } from "./character.action";
+import { addCharacters, addCharactersFailure, addCharactersSuccess } from "./character.action";
 import { createEntityAdapter, Dictionary } from "@ngrx/entity";
 import { Character } from "../../models/character";
 
@@ -19,15 +19,15 @@ const charactersFeature = createFeature({
     name: 'characters',
     reducer: createReducer(
         initialCharactersState,
-        on(loadCharacters, (state: CharactersState) => ({
+        on(addCharacters, (state: CharactersState) => ({
             ...state,
             isLoading: true,
             error: null
         })),
-        on(loadCharactersSuccess, (state: CharactersState, { characters }) => {
-            return adapter.setAll(characters.results, { ...state, ...characters.info, isLoading: false });
+        on(addCharactersSuccess, (state: CharactersState, { characters }) => {
+            return adapter.upsertMany(characters.results, { ...state, ...characters.info, isLoading: false });
         }),
-        on(loadCharactersFailure, (state: CharactersState, { error }) => ({
+        on(addCharactersFailure, (state: CharactersState, { error }) => ({
             ...state,
             isLoading: false,
             error: error.error.error
@@ -48,6 +48,10 @@ const charactersFeature = createFeature({
                         );
                 }
             ),
+            selectCurrentCount: createSelector(
+                adapterSelectors.selectEntities,
+                (entities: Dictionary<Character>) => Object.keys(entities).length
+            )
         };
     }
 });
@@ -56,10 +60,8 @@ export const {
     reducer: charactersReducer,
     selectIsLoading,
     selectAll,
-    selectCount,
     selectNext,
-    selectPages,
-    selectPrev,
     selectError,
+    selectCurrentCount,
     selectFavoritesByIds
 } = charactersFeature;

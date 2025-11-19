@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectAll, selectError, selectFavoritesByIds, selectIsLoading, selectNext, selectPages, selectPrev } from '../../shared/store/character/character.reducer';
-import { loadCharacters } from '../../shared/store/character/character.action';
+import { selectAll, selectCurrentCount, selectError, selectFavoritesByIds, selectIsLoading, selectNext } from '../../shared/store/character/character.reducer';
+import { addCharacters } from '../../shared/store/character/character.action';
 import { AsyncPipe } from '@angular/common';
 import { first, Observable } from 'rxjs';
 import { CharactersService } from '../../shared/services/characters.service';
@@ -9,10 +9,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { CharacterStatus } from '../../shared/models/character';
 import { FavoritesService } from '../../shared/services/favorites.service';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-characters-list',
-  imports: [AsyncPipe, FormsModule],
+  imports: [AsyncPipe, FormsModule, ScrollingModule],
   templateUrl: './characters-list.html',
   styleUrl: './characters-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -22,14 +23,17 @@ export class CharactersList implements OnInit {
   private charactersService = inject(CharactersService);
   private destroyRef = inject(DestroyRef);
   private favoritesService = inject(FavoritesService);
-
+  private viewport = viewChild(CdkVirtualScrollViewport);
+  
   public favorites$ = this.store.select(selectFavoritesByIds(this.favoritesService.getFavorites()));
   public characters$ = this.store.select(selectAll);
   public isLoading$ = this.store.select(selectIsLoading);
-  public prev$ = this.store.select(selectPrev);
   public next$ = this.store.select(selectNext);
-  public pages$ = this.store.select(selectPages);
   public error$ = this.store.select(selectError);
+  public count$ = this.store.select(selectCurrentCount);
+
+  private curIndex = signal(0);
+  private isLastPage = signal(false);
 
   public searchSignal = signal('');
   public filterSignal = signal<CharacterStatus>('');
@@ -39,7 +43,7 @@ export class CharactersList implements OnInit {
   }
 
   public loadPage(page: number = 1): void {
-    this.store.dispatch(loadCharacters({ currentPage: page, search: this.searchSignal(), filter: this.filterSignal() }));
+    this.store.dispatch(addCharacters({ currentPage: page, search: this.searchSignal(), filter: this.filterSignal() }));
   }
   
   public loadPageUrl(page: Observable<string | null>): void {
@@ -49,18 +53,8 @@ export class CharactersList implements OnInit {
     ).subscribe(
       (pageUrl) => {
         const pageNumber = this.charactersService.getPageFromUrl(pageUrl);
-        this.loadPage(pageNumber);
-      }
-    )
-  }
-
-  public loadLastPage(): void {
-    this.pages$.pipe(
-      first(),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(
-      (pageCount) => {
-        this.loadPage(pageCount);
+        if (pageNumber === 0) this.isLastPage.set(true)
+        else this.loadPage(pageNumber);
       }
     )
   }
@@ -73,5 +67,30 @@ export class CharactersList implements OnInit {
   public toggleFavorite(id: number) {
     this.favoritesService.toggleFavorites(id);
     this.favorites$ = this.store.select(selectFavoritesByIds(this.favoritesService.getFavorites()));
+  }
+
+  public onScroll(index: number) {
+    // если последняя то ничего не делаем
+    if (this.isLastPage()) return;
+    // фикс для того что инногда при обновлении состояния у меня скролл откатывался в 0
+    // если изменение скролла на 1 то делаем основную логику для проверки что мы в конце скролла
+    if (Math.abs(index - this.curIndex()) < 2)
+    {
+      this.curIndex.set(index);
+      this.count$.pipe(
+        first(),
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe(
+        (val) => {
+          if (index === val - 5) {
+            this.loadPageUrl(this.next$);
+          }
+        }
+      )
+    }
+    // если нет, то скроллим на сохраненный индекс
+    else {
+      this.viewport()!.scrollToIndex(this.curIndex());
+    } 
   }
 }

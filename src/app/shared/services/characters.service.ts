@@ -19,7 +19,7 @@ export class CharactersService {
   }
 
   public getPageFromUrl(url: string | null): number {
-    if (!url) return 1;
+    if (!url) return 0;
     const match = url.match(/[?&]page=(\d+)/);
     return match ? parseInt(match[1], 10) : 1;
   }
