@@ -1,5 +1,5 @@
-import { Character } from "../../models/character";
-import { EntityState } from "@ngrx/entity";
+import { Character } from '../../models/character';
+import { EntityState } from '@ngrx/entity';
 
 export interface FavoritesState extends EntityState<Character> {
   isLoading: boolean;

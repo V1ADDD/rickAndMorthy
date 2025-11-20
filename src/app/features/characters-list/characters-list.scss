@@ -3,10 +3,9 @@
 @use '../../shared/styles/error';
 @use '../../shared/styles/mixins' as m;
 
-
 .character-info {
   @include m.card;
-  
+
   button {
     @include m.button;
     width: 100%;
@@ -19,14 +18,13 @@
   }
 }
 
-
 form {
   margin: 20px;
   label {
     @include m.label;
     margin-bottom: 8px;
   }
-  
+
   input {
     @include m.input;
     width: 300px;
@@ -37,7 +35,7 @@ form {
   margin: 20px;
   display: flex;
   gap: 8px;
-  
+
   button {
     @include m.button;
   }

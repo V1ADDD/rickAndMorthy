@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FavoritesService {
   private readonly favoritesStore = 'favorites';
@@ -10,18 +10,21 @@ export class FavoritesService {
     let currentState = this.getFavorites();
     let exists = false;
     currentState = currentState.filter((value) => {
-        if (value === id) {
-            exists = !exists;
-            return false;
-        }
-        return true;
-    })
+      if (value === id) {
+        exists = !exists;
+        return false;
+      }
+      return true;
+    });
     if (!exists) currentState.push(id);
     localStorage.setItem(this.favoritesStore, currentState.join(','));
   }
 
   public getFavorites(): number[] {
-    const favorites = localStorage.getItem(this.favoritesStore)?.split(',').map((val) => +val);
+    const favorites = localStorage
+      .getItem(this.favoritesStore)
+      ?.split(',')
+      .map((val) => +val);
     if (!favorites) return [];
     return favorites;
   }

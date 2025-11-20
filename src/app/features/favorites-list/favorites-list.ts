@@ -2,7 +2,11 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { FavoritesService } from '../../shared/services/favorites.service';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { selectAllFavorites, selectErrorFavorites, selectIsLoadingFavorites } from '../../shared/store/favorites/favorites.reducer';
+import {
+  selectAllFavorites,
+  selectErrorFavorites,
+  selectIsLoadingFavorites,
+} from '../../shared/store/favorites/favorites.reducer';
 import { loadFavorites, toggleFavorite } from '../../shared/store/favorites/favorites.action';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
@@ -11,7 +15,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
   imports: [AsyncPipe, ScrollingModule, DatePipe],
   templateUrl: './favorites-list.html',
   styleUrl: './favorites-list.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FavoritesList implements OnInit {
   private favoritesService = inject(FavoritesService);

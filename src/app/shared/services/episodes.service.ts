@@ -1,10 +1,10 @@
-import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { ResponseEpisodes } from "../models/episode";
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ResponseEpisodes } from '../models/episode';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EpisodesService {
   private http = inject(HttpClient);

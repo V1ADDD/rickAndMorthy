@@ -2,7 +2,7 @@
 
 header {
   margin-bottom: 24px;
-  
+
   ul {
     display: flex;
     justify-content: center;
@@ -10,7 +10,7 @@ header {
     flex-direction: row;
     list-style: none;
     font-size: 18px;
-    
+
     li {
       cursor: pointer;
       padding: 8px 16px;
@@ -18,7 +18,8 @@ header {
       color: v.$secondary_font_color;
       font-weight: v.$secondary_font_weight;
       transition: all 0.2s ease;
-      &:hover, &.active {
+      &:hover,
+      &.active {
         color: v.$main_font_color;
         background: v.$card_border;
       }
@@ -32,9 +33,8 @@ header {
         vertical-align: middle;
       }
     }
-
   }
-  
+
   hr {
     border: none;
     height: 1px;

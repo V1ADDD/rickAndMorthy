@@ -1,22 +1,22 @@
 export interface ResponseUser {
-  id: number,
-  username: string,
-  email: string,
-  firstName: string,
-  lastName: string,
-  gender: string,
-  image: string,
-  accessToken: string,
-  refreshToken: string,
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  image: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface ErrorAuth {
-    error: {
-      message: string
-    }
+  error: {
+    message: string;
+  };
 }
 
 export interface Tokens {
-  accessToken: string,
-  refreshToken: string
+  accessToken: string;
+  refreshToken: string;
 }

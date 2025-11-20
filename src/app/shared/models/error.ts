@@ -1,5 +1,5 @@
 export interface ResponseError {
-    error: {
-        error: string
-    }
-} 
+  error: {
+    error: string;
+  };
+}

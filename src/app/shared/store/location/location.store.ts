@@ -1,6 +1,6 @@
-import { EntityState } from "@ngrx/entity";
-import { Location } from "../../models/location";
-import { ResponseError } from "../../models/error";
+import { EntityState } from '@ngrx/entity';
+import { Location } from '../../models/location';
+import { ResponseError } from '../../models/error';
 
 export interface LocationsState extends EntityState<Location> {
   isLoading: boolean;

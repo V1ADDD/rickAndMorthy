@@ -1,4 +1,9 @@
-import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  isDevMode,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -21,11 +26,11 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
-    provideStore({ 
+    provideStore({
       favorites: favoritesReducer,
       characters: charactersReducer,
       locations: locationsReducer,
-      episodes: episodesReducer
+      episodes: episodesReducer,
     }),
     provideEffects([CharacterEffects, LocationEffects, EpisodeEffects, FavoritesEffects]),
     provideHttpClient(withInterceptors([authInterceptor])),
@@ -36,5 +41,5 @@ export const appConfig: ApplicationConfig = {
       trace: false,
       traceLimit: 75,
     }),
-  ]
+  ],
 };
