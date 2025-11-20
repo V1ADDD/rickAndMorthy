@@ -1,6 +1,21 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectAll, selectCurrentCount, selectError, selectFavoritesByIds, selectIsLoading, selectNext } from '../../shared/store/character/character.reducer';
+import {
+  selectAll,
+  selectCurrentCount,
+  selectError,
+  selectFavoritesByIds,
+  selectIsLoading,
+  selectNext,
+} from '../../shared/store/character/character.reducer';
 import { addCharacters, resetCharacters } from '../../shared/store/character/character.action';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { first, Observable } from 'rxjs';
@@ -16,7 +31,7 @@ import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrollin
   imports: [AsyncPipe, FormsModule, ScrollingModule, DatePipe],
   templateUrl: './characters-list.html',
   styleUrl: './characters-list.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CharactersList implements OnInit {
   private store = inject(Store);
@@ -24,7 +39,7 @@ export class CharactersList implements OnInit {
   private destroyRef = inject(DestroyRef);
   private favoritesService = inject(FavoritesService);
   private viewport = viewChild(CdkVirtualScrollViewport);
-  
+
   public favorites$ = this.store.select(selectFavoritesByIds(this.favoritesService.getFavorites()));
   public characters$ = this.store.select(selectAll);
   public isLoading$ = this.store.select(selectIsLoading);
@@ -38,26 +53,27 @@ export class CharactersList implements OnInit {
   public searchSignal = signal('');
   public filterSignal = signal<CharacterStatus>('');
 
-  public ngOnInit(): void { 
-    this.store.dispatch(resetCharacters())
+  public ngOnInit(): void {
+    this.store.dispatch(resetCharacters());
     this.loadPage();
   }
 
-  public loadPage(page: number = 1): void {
-    this.store.dispatch(addCharacters({ currentPage: page, search: this.searchSignal(), filter: this.filterSignal() }));
+  public loadPage(page = 1): void {
+    this.store.dispatch(
+      addCharacters({
+        currentPage: page,
+        search: this.searchSignal(),
+        filter: this.filterSignal(),
+      }),
+    );
   }
-  
+
   public loadPageUrl(page: Observable<string | null>): void {
-    page.pipe(
-      first(),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(
-      (pageUrl) => {
-        const pageNumber = this.charactersService.getPageFromUrl(pageUrl);
-        if (pageNumber === 0) this.isLastPage.set(true)
-        else this.loadPage(pageNumber);
-      }
-    )
+    page.pipe(first(), takeUntilDestroyed(this.destroyRef)).subscribe((pageUrl) => {
+      const pageNumber = this.charactersService.getPageFromUrl(pageUrl);
+      if (pageNumber === 0) this.isLastPage.set(true);
+      else this.loadPage(pageNumber);
+    });
   }
 
   public filterStatus(status: CharacterStatus): void {
@@ -83,23 +99,17 @@ export class CharactersList implements OnInit {
     if (this.isLastPage()) return;
     // фикс для того что инногда при обновлении состояния у меня скролл откатывался в 0
     // если изменение скролла на 1 то делаем основную логику для проверки что мы в конце скролла
-    if (Math.abs(index - this.curIndex()) < 2)
-    {
+    if (Math.abs(index - this.curIndex()) < 2) {
       this.curIndex.set(index);
-      this.count$.pipe(
-        first(),
-        takeUntilDestroyed(this.destroyRef)
-      ).subscribe(
-        (val) => {
-          if (index === val - 5) {
-            this.loadPageUrl(this.next$);
-          }
+      this.count$.pipe(first(), takeUntilDestroyed(this.destroyRef)).subscribe((val) => {
+        if (index === val - 5) {
+          this.loadPageUrl(this.next$);
         }
-      )
+      });
     }
     // если нет, то скроллим на сохраненный индекс
     else {
       this.viewport()!.scrollToIndex(this.curIndex());
-    } 
+    }
   }
 }

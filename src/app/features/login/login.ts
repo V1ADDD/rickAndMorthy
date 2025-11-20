@@ -1,5 +1,18 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { SigninService } from '../../shared/services/signin.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
@@ -11,7 +24,7 @@ import { Router } from '@angular/router';
   imports: [ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Login implements OnInit {
   public form!: FormGroup;
@@ -26,7 +39,7 @@ export class Login implements OnInit {
   public ngOnInit(): void {
     this.form = this.fb.group({
       login: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -41,20 +54,23 @@ export class Login implements OnInit {
   public onSubmit() {
     if (this.form.valid) {
       console.log('Form submitted:', this.form.value);
-      this.signinService.authUser(this.login.value, this.password.value).pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError((error: ErrorAuth) => {
-          this.responseError.set(error.error.message);
-          return of(null);
-        })
-      ).subscribe((user) => {
-        if (user) {
-          this.responseError.set('');
-          localStorage.setItem('token', (<ResponseUser>user).accessToken);
-          localStorage.setItem('refreshToken', (<ResponseUser>user).refreshToken);
-          this.router.navigate(['/characters']);
-        }
-      })
+      this.signinService
+        .authUser(this.login.value, this.password.value)
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          catchError((error: ErrorAuth) => {
+            this.responseError.set(error.error.message);
+            return of(null);
+          }),
+        )
+        .subscribe((user) => {
+          if (user) {
+            this.responseError.set('');
+            localStorage.setItem('token', (user as ResponseUser).accessToken);
+            localStorage.setItem('refreshToken', (user as ResponseUser).refreshToken);
+            this.router.navigate(['/characters']);
+          }
+        });
     } else {
       this.form.markAllAsTouched();
     }

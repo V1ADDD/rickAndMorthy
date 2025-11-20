@@ -1,22 +1,21 @@
 <h1>Episodes</h1>
 @if (isLoading$ | async) {
-    <p>Загрузка...</p>
-}
-@else {
-    <div class="container">
-        @for (episode of episodes$ | async; track episode.id) {
-            <div class="episode-info">
-                <h2>{{episode.name}}</h2>
-                <p>Air date: {{episode.air_date}}</p>
-                <p>Episode: {{episode.episode}}</p>
-                <p>Created: {{episode.created | date: 'short'}}</p>
-            </div>
-        }
-    </div>
-    <div class="pagination">
-        <button (click)="loadPage(1)" [disabled]="!(prev$ | async)">first</button>
-        <button (click)="loadPageUrl(prev$)" [disabled]="!(prev$ | async)">prev</button>
-        <button (click)="loadPageUrl(next$)" [disabled]="!(next$ | async)">next</button>
-        <button (click)="loadLastPage()" [disabled]="!(next$ | async)">last</button>
-    </div>
+  <p>Загрузка...</p>
+} @else {
+  <div class="container">
+    @for (episode of episodes$ | async; track episode.id) {
+      <div class="episode-info">
+        <h2>{{ episode.name }}</h2>
+        <p>Air date: {{ episode.air_date }}</p>
+        <p>Episode: {{ episode.episode }}</p>
+        <p>Created: {{ episode.created | date: 'short' }}</p>
+      </div>
+    }
+  </div>
+  <div class="pagination">
+    <button (click)="loadPage(1)" [disabled]="(prev$ | async) === null">first</button>
+    <button (click)="loadPageUrl(prev$)" [disabled]="(prev$ | async) === null">prev</button>
+    <button (click)="loadPageUrl(next$)" [disabled]="(next$ | async) === null">next</button>
+    <button (click)="loadLastPage()" [disabled]="(next$ | async) === null">last</button>
+  </div>
 }
