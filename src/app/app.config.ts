@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideStore } from '@ngrx/store';
 import { charactersReducer } from './shared/store/character/character.reducer';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideEffects } from '@ngrx/effects';
 import { CharacterEffects } from './shared/store/character/character.effect';
 import { locationsReducer } from './shared/store/location/location.reducer';
@@ -14,6 +14,7 @@ import { episodesReducer } from './shared/store/episode/episode.reducer';
 import { EpisodeEffects } from './shared/store/episode/episode.effect';
 import { favoritesReducer } from './shared/store/favorites/favorites.reducer';
 import { FavoritesEffects } from './shared/store/favorites/favorites.effect';
+import { authInterceptor } from './shared/interceptors/auth-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,7 +28,7 @@ export const appConfig: ApplicationConfig = {
       episodes: episodesReducer
     }),
     provideEffects([CharacterEffects, LocationEffects, EpisodeEffects, FavoritesEffects]),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),

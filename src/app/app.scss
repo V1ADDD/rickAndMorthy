@@ -18,12 +18,12 @@ header {
       color: v.$secondary_font_color;
       font-weight: v.$secondary_font_weight;
       transition: all 0.2s ease;
-      
       &:hover, &.active {
         color: v.$main_font_color;
         background: v.$card_border;
       }
     }
+
   }
   
   hr {

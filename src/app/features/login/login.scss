@@ -1,0 +1,28 @@
+@use '../../shared/styles/mixins' as m;
+@use '../../shared/styles/text';
+@use '../../shared/styles/error';
+
+form {
+    @include m.card;
+    margin: 100px auto;
+    width: 300px;
+    label {
+        @include m.label;
+        margin-bottom: 5px;
+    }
+    input {
+        @include m.input;
+        width: 260px;
+        margin-bottom: 20px;
+    }
+    .navigation {
+        button {
+            @include m.button;
+        }
+    }
+    .error {
+        margin: 0 0 20px 0;
+        padding: 12px;
+        width: 260px;
+    }
+}
