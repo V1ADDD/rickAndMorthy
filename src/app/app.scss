@@ -22,6 +22,15 @@ header {
         color: v.$main_font_color;
         background: v.$card_border;
       }
+
+      img {
+        width: 23px;
+        height: 23px;
+        margin-right: 10px;
+        border-radius: 15px;
+        border: v.$button_border;
+        vertical-align: middle;
+      }
     }
 
   }

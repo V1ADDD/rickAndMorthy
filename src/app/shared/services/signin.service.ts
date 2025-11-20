@@ -17,8 +17,8 @@ export class SigninService {
     )
   }
 
-  public getMe(): Observable<ResponseUser | ErrorAuth> {
-    return this.http.get<ResponseUser | ErrorAuth>(`${this.API_URL}/me`);
+  public getMe(): Observable<ResponseUser> {
+    return this.http.get<ResponseUser>(`${this.API_URL}/me`);
   }
 
   public refreshToken(refreshToken: string): Observable<Tokens> {

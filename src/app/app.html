@@ -9,6 +9,7 @@
             <li [routerLink]="'/locations'" [class.active]="isActive('/locations')">Locations</li>
             <li [routerLink]="'/episodes'" [class.active]="isActive('/episodes')">Episodes</li>
             <li (click)="logOut()">Logout</li>
+            <li><img [src]="(user$ | async)?.image">{{ (user$ | async)?.username }}</li>
         }
     </ul>
     <hr>
