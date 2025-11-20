@@ -8,10 +8,10 @@
         <input id="search" name="search" [(ngModel)]="searchSignal">
     </form>
     <div class="filter">
-        <button (click)="filterStatus('')" [class.active]="filterSignal() === ''">All</button>
-        <button (click)="filterStatus('Alive')" [class.active]="filterSignal() === 'Alive'">Alive</button>
-        <button (click)="filterStatus('Dead')" [class.active]="filterSignal() === 'Dead'">Dead</button>
-        <button (click)="filterStatus('unknown')" [class.active]="filterSignal() === 'unknown'">unknown</button>
+        <button (click)="filterStatus('')" [disabled]="filterSignal() === ''">All</button>
+        <button (click)="filterStatus('Alive')" [disabled]="filterSignal() === 'Alive'">Alive</button>
+        <button (click)="filterStatus('Dead')" [disabled]="filterSignal() === 'Dead'">Dead</button>
+        <button (click)="filterStatus('unknown')" [disabled]="filterSignal() === 'unknown'">unknown</button>
     </div>
     @if (error$ | async) {
         <p class="error">{{ error$ | async }}</p>

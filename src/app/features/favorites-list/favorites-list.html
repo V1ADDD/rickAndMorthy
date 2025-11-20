@@ -15,9 +15,6 @@
                 <h2>{{character.name}}</h2>
                 <img [src]="character.image">
                 <button (click)="toggleFavorite(character.id)">Toggle favorite</button>
-                @if ((favorites$ | async)?.includes(character)) {
-                    <p class="favorite">Favorite</p>
-                }
                 <p>Status: {{character.status}}</p>
                 <p>Species: {{character.species}}</p>
                 <p>{{character.type}}</p>

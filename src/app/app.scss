@@ -1,3 +1,5 @@
+@use './shared/styles/variables' as v;
+
 header {
   margin-bottom: 24px;
   
@@ -13,18 +15,13 @@ header {
       cursor: pointer;
       padding: 8px 16px;
       border-radius: 6px;
-      color: #666;
-      font-weight: 300;
+      color: v.$secondary_font_color;
+      font-weight: v.$secondary_font_weight;
       transition: all 0.2s ease;
       
-      &:hover {
-        color: #333;
-        background: #f5f5f5;
-      }
-      
-      &.active {
-        color: #000;
-        background: #f0f0f0;
+      &:hover, &.active {
+        color: v.$main_font_color;
+        background: v.$card_border;
       }
     }
   }
@@ -32,7 +29,7 @@ header {
   hr {
     border: none;
     height: 1px;
-    background: #e0e0e0;
+    background: v.$card_border;
     margin: 0;
   }
 }
