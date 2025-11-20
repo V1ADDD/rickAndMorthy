@@ -1,0 +1,43 @@
+<h1>Characters</h1>
+@if (isLoading$ | async) {
+    <p>Загрузка...</p>
+}
+@else {
+    <form (submit)="searchCharacter()">
+        <label for="search">Find character:</label>
+        <input id="search" name="search" [(ngModel)]="searchSignal">
+    </form>
+    <div class="filter">
+        <button (click)="filterStatus('')" [disabled]="filterSignal() === ''">All</button>
+        <button (click)="filterStatus('Alive')" [disabled]="filterSignal() === 'Alive'">Alive</button>
+        <button (click)="filterStatus('Dead')" [disabled]="filterSignal() === 'Dead'">Dead</button>
+        <button (click)="filterStatus('unknown')" [disabled]="filterSignal() === 'unknown'">unknown</button>
+    </div>
+    @if (error$ | async) {
+        <p class="error">{{ error$ | async }}</p>
+    }
+    
+    <cdk-virtual-scroll-viewport 
+        itemSize="300" 
+        orientation="horizontal" 
+        class="viewport"
+        (scrolledIndexChange)="onScroll($event)">
+        <div class="container">
+            <div *cdkVirtualFor="let character of characters$ | async" class="character-info">
+                <h2>{{character.name}}</h2>
+                <img [src]="character.image">
+                <button (click)="toggleFavorite(character.id)">Toggle favorite</button>
+                @if ((favorites$ | async)?.includes(character)) {
+                    <p class="favorite">Favorite</p>
+                }
+                <p>Status: {{character.status}}</p>
+                <p>Species: {{character.species}}</p>
+                <p>{{character.type}}</p>
+                <p>Gender: {{character.gender}}</p>
+                <p>Origin: {{character.origin.name}}</p>
+                <p>Location: {{character.location.name}}</p>
+                <p>Created: {{character.created | date: 'short'}}</p>
+            </div>
+        </div>
+    </cdk-virtual-scroll-viewport>
+}

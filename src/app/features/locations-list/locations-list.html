@@ -1,0 +1,23 @@
+<h1>Locations</h1>
+
+@if (isLoading$ | async) {
+    <p>Загрузка...</p>
+}
+@else {
+    <div class="container">
+        @for (location of locations$ | async; track $index) {
+            <div class="location-info">
+                <h2>{{location.name}}</h2>
+                <p>Type: {{location.type}}</p>
+                <p>Dimension: {{location.dimension}}</p>
+                <p>Created: {{location.created | date: 'short'}}</p>
+            </div>
+        }
+    </div>
+    <div class="pagination">
+        <button (click)="loadPage(1)" [disabled]="!(prev$ | async)">first</button>
+        <button (click)="loadPageUrl(prev$)" [disabled]="!(prev$ | async)">prev</button>
+        <button (click)="loadPageUrl(next$)" [disabled]="!(next$ | async)">next</button>
+        <button (click)="loadLastPage()" [disabled]="!(next$ | async)">last</button>
+    </div>
+}
