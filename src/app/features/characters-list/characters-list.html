@@ -1,0 +1,42 @@
+<h1>Characters</h1>
+<form (submit)="searchCharacter()">
+  <label for="search">Find character:</label>
+  <input id="search" name="search" [(ngModel)]="searchSignal" />
+</form>
+<div class="filter">
+  @for (filter of filters; track $index) {
+    <button (click)="filterStatus(filter)" [disabled]="filterSignal() === filter">
+      {{ filter ? filter : 'All' }}
+    </button>
+  }
+</div>
+
+@if (error$ | async) {
+  <p class="error">{{ error$ | async }}</p>
+}
+
+@if (isLoading$ | async) {
+  <p>Loading...</p>
+} @else {
+  <p>All characters loaded</p>
+}
+
+<cdk-virtual-scroll-viewport itemSize="300" orientation="horizontal" class="viewport">
+  <div class="container">
+    <div *cdkVirtualFor="let character of dataSource" class="character-info">
+      <h2>{{ character.name }}</h2>
+      <img [src]="character.image" alt="character" />
+      <button (click)="toggleFavorite(character.id)">Toggle favorite</button>
+      @if ((favorites$ | async)?.includes(character)) {
+        <p class="favorite">Favorite</p>
+      }
+      <p>Status: {{ character.status }}</p>
+      <p>Species: {{ character.species }}</p>
+      <p>{{ character.type }}</p>
+      <p>Gender: {{ character.gender }}</p>
+      <p>Origin: {{ character.origin.name }}</p>
+      <p>Location: {{ character.location.name }}</p>
+      <p>Created: {{ character.created | date: 'short' }}</p>
+    </div>
+  </div>
+</cdk-virtual-scroll-viewport>

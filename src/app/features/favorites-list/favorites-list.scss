@@ -1,0 +1,13 @@
+@use '../../shared/styles/text';
+@use '../../shared/styles/viewport';
+@use '../../shared/styles/error';
+@use '../../shared/styles/mixins' as m;
+
+.character-info {
+  @include m.card;
+
+  button {
+    @include m.button;
+    width: 100%;
+  }
+}
