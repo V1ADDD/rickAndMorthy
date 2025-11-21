@@ -5,7 +5,6 @@ import {
   selectFavoritesByIds,
   selectIsLoading,
 } from '../../shared/store/character/character.reducer';
-import { resetCharacters } from '../../shared/store/character/character.action';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CharacterStatus } from '../../shared/models/character';
@@ -19,7 +18,6 @@ import { InfiniteScrollDataSource } from '../../shared/data-source/infinite-scro
   templateUrl: './characters-list.html',
   styleUrl: './characters-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [InfiniteScrollDataSource],
 })
 export class CharactersList implements OnInit {
   private store = inject(Store);
@@ -39,19 +37,17 @@ export class CharactersList implements OnInit {
     this.dataSource.searchTerm.set(this.searchSignal());
     this.dataSource.filterStatus.set(this.filterSignal());
 
-    this.store.dispatch(resetCharacters());
+    this.dataSource.reset();
   }
 
   public filterStatus(status: CharacterStatus): void {
     this.filterSignal.set(status);
     this.dataSource.filterStatus.set(status);
-    this.store.dispatch(resetCharacters());
     this.dataSource.reset();
   }
 
   public searchCharacter(): void {
     this.dataSource.searchTerm.set(this.searchSignal());
-    this.store.dispatch(resetCharacters());
     this.dataSource.reset();
   }
 

@@ -1,5 +1,5 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   selectAll,
@@ -10,8 +10,7 @@ import {
 } from '../../shared/store/episode/episode.reducer';
 import { loadEpisodes } from '../../shared/store/episode/episode.action';
 import { EpisodesService } from '../../shared/services/episodes.service';
-import { first, Observable } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable, take, tap } from 'rxjs';
 
 @Component({
   selector: 'app-episodes-list',
@@ -23,7 +22,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class EpisodesList implements OnInit {
   private store = inject(Store);
   private episodesService = inject(EpisodesService);
-  private destroyRef = inject(DestroyRef);
 
   public episodes$ = this.store.select(selectAll);
   public isLoading$ = this.store.select(selectIsLoading);
@@ -40,15 +38,24 @@ export class EpisodesList implements OnInit {
   }
 
   public loadPageUrl(page: Observable<string | null>): void {
-    page.pipe(first(), takeUntilDestroyed(this.destroyRef)).subscribe((pageUrl) => {
-      const pageNumber = this.episodesService.getPageFromUrl(pageUrl);
-      this.loadPage(pageNumber);
-    });
+    page
+      .pipe(
+        take(1),
+        tap((pageUrl) => {
+          this.loadPage(this.episodesService.getPageFromUrl(pageUrl));
+        }),
+      )
+      .subscribe();
   }
 
   public loadLastPage(): void {
-    this.pages$.pipe(first(), takeUntilDestroyed(this.destroyRef)).subscribe((pageCount) => {
-      this.loadPage(pageCount);
-    });
+    this.pages$
+      .pipe(
+        take(1),
+        tap((pageCount) => {
+          this.loadPage(pageCount);
+        }),
+      )
+      .subscribe();
   }
 }

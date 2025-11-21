@@ -15,8 +15,8 @@ import {
 } from '@angular/forms';
 import { SigninService } from '../../shared/services/signin.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, of } from 'rxjs';
-import { ErrorAuth, ResponseUser } from '../../shared/models/auth';
+import { catchError, of, tap } from 'rxjs';
+import { ErrorAuth } from '../../shared/models/auth';
 import { Router } from '@angular/router';
 
 @Component({
@@ -53,7 +53,6 @@ export class Login implements OnInit {
 
   public onSubmit() {
     if (this.form.valid) {
-      console.log('Form submitted:', this.form.value);
       this.signinService
         .authUser(this.login.value, this.password.value)
         .pipe(
@@ -62,15 +61,16 @@ export class Login implements OnInit {
             this.responseError.set(error.error.message);
             return of(null);
           }),
+          tap((user) => {
+            if (user && 'accessToken' in user) {
+              this.responseError.set('');
+              localStorage.setItem('token', user.accessToken);
+              localStorage.setItem('refreshToken', user.refreshToken);
+              this.router.navigate(['/characters']);
+            }
+          }),
         )
-        .subscribe((user) => {
-          if (user) {
-            this.responseError.set('');
-            localStorage.setItem('token', (user as ResponseUser).accessToken);
-            localStorage.setItem('refreshToken', (user as ResponseUser).refreshToken);
-            this.router.navigate(['/characters']);
-          }
-        });
+        .subscribe();
     } else {
       this.form.markAllAsTouched();
     }

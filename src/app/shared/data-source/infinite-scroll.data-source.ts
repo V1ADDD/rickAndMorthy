@@ -1,18 +1,19 @@
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, merge, Observable, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { Character, CharacterStatus } from '../models/character';
 import { selectAll, selectNext, selectIsLoading } from '../store/character/character.reducer';
-import { addCharacters } from '../store/character/character.action';
+import { addCharacters, resetCharacters } from '../store/character/character.action';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class InfiniteScrollDataSource extends DataSource<Character> {
   private store = inject(Store);
 
   private readonly _dataStream = new BehaviorSubject<Character[]>([]);
-  private readonly _subscription = new Subscription();
   private destroyRef = inject(DestroyRef);
 
   private _fetchedPages = signal<Set<number>>(new Set());
@@ -23,40 +24,31 @@ export class InfiniteScrollDataSource extends DataSource<Character> {
   public filterStatus = signal<CharacterStatus>('');
 
   public connect(collectionViewer: CollectionViewer): Observable<Character[]> {
-    this._subscription.add(
-      this.store
-        .select(selectAll)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((characters) => {
+    merge(
+      this.store.select(selectAll).pipe(
+        tap((characters) => {
           this._dataStream.next(characters);
           this._isLoading.set(false);
         }),
-    );
-
-    this._subscription.add(
-      this.store
-        .select(selectNext)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((next) => {
+      ),
+      this.store.select(selectNext).pipe(
+        tap((next) => {
           this._hasMore.set(!!next);
         }),
-    );
-
-    this._subscription.add(
-      this.store
-        .select(selectIsLoading)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((loading) => {
+      ),
+      this.store.select(selectIsLoading).pipe(
+        tap((loading) => {
           this._isLoading.set(loading);
         }),
-    );
-
-    // Обрабатываем скролл
-    this._subscription.add(
-      collectionViewer.viewChange.subscribe((range) => {
-        this._handleScroll(range);
-      }),
-    );
+      ),
+      collectionViewer.viewChange.pipe(
+        tap((range) => {
+          this._handleScroll(range);
+        }),
+      ),
+    )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
 
     this._loadPage(1);
 
@@ -64,8 +56,7 @@ export class InfiniteScrollDataSource extends DataSource<Character> {
   }
 
   public disconnect(): void {
-    this._subscription.unsubscribe();
-    this._dataStream.unsubscribe();
+    // empty because i can still go back to the page where i need this
   }
 
   private _handleScroll(range: { start: number; end: number }): void {
@@ -95,6 +86,7 @@ export class InfiniteScrollDataSource extends DataSource<Character> {
   }
 
   public reset(): void {
+    this.store.dispatch(resetCharacters());
     this._fetchedPages.set(new Set());
     this._hasMore.set(true);
     this._loadPage(1);

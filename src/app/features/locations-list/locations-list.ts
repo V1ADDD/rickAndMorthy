@@ -1,5 +1,5 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   selectAll,
@@ -9,8 +9,7 @@ import {
   selectPrev,
 } from '../../shared/store/location/location.reducer';
 import { loadLocations } from '../../shared/store/location/location.action';
-import { first, Observable } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable, take, tap } from 'rxjs';
 import { LocationsService } from '../../shared/services/locations.service';
 
 @Component({
@@ -22,7 +21,6 @@ import { LocationsService } from '../../shared/services/locations.service';
 })
 export class LocationsList implements OnInit {
   private store = inject(Store);
-  private destroyRef = inject(DestroyRef);
   private locationsService = inject(LocationsService);
 
   public locations$ = this.store.select(selectAll);
@@ -40,15 +38,24 @@ export class LocationsList implements OnInit {
   }
 
   public loadPageUrl(page: Observable<string | null>): void {
-    page.pipe(first(), takeUntilDestroyed(this.destroyRef)).subscribe((pageUrl) => {
-      const pageNumber = this.locationsService.getPageFromUrl(pageUrl);
-      this.loadPage(pageNumber);
-    });
+    page
+      .pipe(
+        take(1),
+        tap((pageUrl) => {
+          this.loadPage(this.locationsService.getPageFromUrl(pageUrl));
+        }),
+      )
+      .subscribe();
   }
 
   public loadLastPage(): void {
-    this.pages$.pipe(first(), takeUntilDestroyed(this.destroyRef)).subscribe((pageCount) => {
-      this.loadPage(pageCount);
-    });
+    this.pages$
+      .pipe(
+        take(1),
+        tap((pageCount) => {
+          this.loadPage(pageCount);
+        }),
+      )
+      .subscribe();
   }
 }
