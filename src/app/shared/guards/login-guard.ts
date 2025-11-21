@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { CanMatchFn, Router } from '@angular/router';
+import { CanMatchFn, RedirectCommand, Router } from '@angular/router';
 import { SigninService } from '../services/signin.service';
 import { catchError, map, of, take } from 'rxjs';
 
@@ -11,8 +11,7 @@ export const loginGuard: CanMatchFn = () => {
     catchError(() => of(null)),
     map((user) => {
       if (user) {
-        router.navigate(['/characters']);
-        return false;
+        return new RedirectCommand(router.parseUrl('/characters'));
       }
       return true;
     }),
