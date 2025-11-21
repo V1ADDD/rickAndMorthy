@@ -4,12 +4,11 @@
   <input id="search" name="search" [(ngModel)]="searchSignal" />
 </form>
 <div class="filter">
-  <button (click)="filterStatus('')" [disabled]="filterSignal() === ''">All</button>
-  <button (click)="filterStatus('Alive')" [disabled]="filterSignal() === 'Alive'">Alive</button>
-  <button (click)="filterStatus('Dead')" [disabled]="filterSignal() === 'Dead'">Dead</button>
-  <button (click)="filterStatus('unknown')" [disabled]="filterSignal() === 'unknown'">
-    unknown
-  </button>
+  @for (filter of filters; track $index) {
+    <button (click)="filterStatus(filter)" [disabled]="filterSignal() === filter">
+      {{ filter ? filter : 'All' }}
+    </button>
+  }
 </div>
 
 @if (error$ | async) {

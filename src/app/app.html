@@ -1,12 +1,11 @@
 <header>
   <ul>
-    @if (isActive('/login')) {
+    @if (isGuest()) {
       <li>Login Page</li>
     } @else {
-      <li [routerLink]="'/characters'" [class.active]="isActive('/characters')">Characters</li>
-      <li [routerLink]="'/favorites'" [class.active]="isActive('/favorites')">Favorites</li>
-      <li [routerLink]="'/locations'" [class.active]="isActive('/locations')">Locations</li>
-      <li [routerLink]="'/episodes'" [class.active]="isActive('/episodes')">Episodes</li>
+      @for (tab of tabs; track $index) {
+        <li [routerLink]="'/' + tab" [class.active]="isActive('/' + tab)">{{ tab | titlecase }}</li>
+      }
       <li (click)="logOut()" (keydown)="logOut()" tabindex="0" role="button">Logout</li>
       <li>
         <img [src]="(user$ | async)?.image" alt="profile-pic" />{{ (user$ | async)?.username }}

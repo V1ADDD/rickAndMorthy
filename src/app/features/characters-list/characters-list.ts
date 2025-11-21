@@ -33,6 +33,8 @@ export class CharactersList implements OnInit {
   public searchSignal = signal('');
   public filterSignal = signal<CharacterStatus>('');
 
+  public filters: CharacterStatus[] = ['', 'Alive', 'Dead', 'unknown'];
+
   public ngOnInit(): void {
     this.dataSource.searchTerm.set(this.searchSignal());
     this.dataSource.filterStatus.set(this.filterSignal());
