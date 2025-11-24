@@ -54,15 +54,18 @@ const charactersFeature = createFeature({
             .map((id) => entities[id])
             .filter((character): character is Character => character !== undefined);
         }),
-      selectCurrentCount: () =>
-        createSelector(
-          adapterSelectors.selectEntities,
-          (entities: Dictionary<Character>) => Object.keys(entities).length,
-        ),
+      selectCurrentCount: createSelector(
+        adapterSelectors.selectEntities,
+        (entities: Dictionary<Character>) => Object.keys(entities).length,
+      ),
       selectCharacterById: (id: number) =>
         createSelector(adapterSelectors.selectEntities, (entities: Dictionary<Character>) => {
           return entities[id];
         }),
+      selectNames: createSelector(
+        adapterSelectors.selectEntities,
+        (entities: Dictionary<Character>) => Object.values(entities).map((char) => char?.name),
+      ),
     };
   },
 });
@@ -76,4 +79,5 @@ export const {
   selectCurrentCount,
   selectFavoritesByIds,
   selectCharacterById,
+  selectNames,
 } = charactersFeature;

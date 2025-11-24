@@ -15,7 +15,7 @@ export const characterGuard: CanMatchFn = (route: Route, segments: UrlSegment[])
     return new RedirectCommand(router.parseUrl('/characters'));
   }
 
-  return store.select(selectCurrentCount()).pipe(
+  return store.select(selectCurrentCount).pipe(
     take(1),
     map((count) => {
       if (characterId <= count) {

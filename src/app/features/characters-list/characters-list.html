@@ -1,7 +1,12 @@
 <h1>Characters</h1>
 <form (submit)="searchCharacter()">
   <label for="search">Find character:</label>
-  <input id="search" name="search" [(ngModel)]="searchSignal" />
+  <input id="search" list="list" name="search" [(ngModel)]="searchSignal" autocomplete="off" />
+  <datalist id="list">
+    @for (name of names$ | async; track $index) {
+      <option [value]="name"></option>
+    }
+  </datalist>
 </form>
 <div class="filter">
   @for (filter of filters; track $index) {

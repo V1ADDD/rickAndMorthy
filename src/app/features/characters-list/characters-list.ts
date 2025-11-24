@@ -4,6 +4,7 @@ import {
   selectError,
   selectFavoritesByIds,
   selectIsLoading,
+  selectNames,
 } from '../../shared/store/character/character.reducer';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -36,6 +37,7 @@ export class CharactersList implements OnInit {
   public dataSource = inject(InfiniteScrollDataSource);
 
   public favorites$ = this.store.select(selectFavoritesByIds(this.favoritesService.getFavorites()));
+  public names$ = this.store.select(selectNames);
   public isLoading$ = this.store.select(selectIsLoading);
   public error$ = this.store.select(selectError);
 
