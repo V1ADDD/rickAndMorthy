@@ -16,6 +16,11 @@
     font-weight: 500;
     margin: 8px 0;
   }
+
+  &:hover {
+    scale: 0.99;
+    cursor: pointer;
+  }
 }
 
 form {

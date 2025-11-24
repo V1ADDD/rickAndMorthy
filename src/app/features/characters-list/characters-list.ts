@@ -11,10 +11,12 @@ import { CharacterStatus } from '../../shared/models/character';
 import { FavoritesService } from '../../shared/services/favorites.service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollDataSource } from '../../shared/data-source/infinite-scroll.data-source';
+import { TruncatePipe } from '../../shared/pipes/truncate-pipe';
+import { ToggleStatus } from '../../shared/directives/toggle-status';
 
 @Component({
   selector: 'app-characters-list',
-  imports: [AsyncPipe, FormsModule, ScrollingModule, DatePipe],
+  imports: [AsyncPipe, FormsModule, ScrollingModule, DatePipe, TruncatePipe, ToggleStatus],
   templateUrl: './characters-list.html',
   styleUrl: './characters-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,8 +53,13 @@ export class CharactersList implements OnInit {
     this.dataSource.reset();
   }
 
-  public toggleFavorite(id: number): void {
+  public toggleFavorite(id: number, event: MouseEvent): void {
+    event.stopPropagation();
     this.favoritesService.toggleFavorites(id);
     this.favorites$ = this.store.select(selectFavoritesByIds(this.favoritesService.getFavorites()));
+  }
+
+  someFunc() {
+    alert(1);
   }
 }

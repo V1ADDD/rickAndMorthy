@@ -6,7 +6,7 @@
       @for (tab of tabs; track $index) {
         <li [routerLink]="'/' + tab" [class.active]="isActive('/' + tab)">{{ tab | titlecase }}</li>
       }
-      <li (click)="logOut()" (keydown)="logOut()" tabindex="0" role="button">Logout</li>
+      <li (click)="logOut()" (keypress)="logOut()" tabindex="0" role="button">Logout</li>
       <li>
         <img [src]="(user$ | async)?.image" alt="profile-pic" />{{ (user$ | async)?.username }}
       </li>

@@ -23,14 +23,21 @@
 
 <cdk-virtual-scroll-viewport itemSize="300" orientation="horizontal" class="viewport">
   <div class="container">
-    <div *cdkVirtualFor="let character of dataSource" class="character-info">
-      <h2>{{ character.name }}</h2>
+    <div
+      *cdkVirtualFor="let character of dataSource"
+      (click)="someFunc()"
+      (keypress)="someFunc()"
+      tabindex="0"
+      role="button"
+      class="character-info"
+    >
+      <h2 [title]="character.name">{{ character.name | truncate }}</h2>
       <img [src]="character.image" alt="character" />
-      <button (click)="toggleFavorite(character.id)">Toggle favorite</button>
+      <button (click)="toggleFavorite(character.id, $event)">Toggle favorite</button>
       @if ((favorites$ | async)?.includes(character)) {
         <p class="favorite">Favorite</p>
       }
-      <p>Status: {{ character.status }}</p>
+      <p appToggleStatus="{{ character.status }}"></p>
       <p>Species: {{ character.species }}</p>
       <p>{{ character.type }}</p>
       <p>Gender: {{ character.gender }}</p>
