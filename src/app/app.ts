@@ -26,7 +26,7 @@ export class App {
   }
 
   public isGuest(): boolean {
-    return !this.tabs.includes(this.router.url.slice(1));
+    return !this.tabs.includes(this.router.url.slice(1).split('/')[0]);
   }
 
   public logOut(): void {

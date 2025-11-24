@@ -1,0 +1,82 @@
+@use '../../shared/styles/mixins' as m;
+@use '../../shared/styles/variables' as v;
+
+.character-details-container {
+  margin: 20px;
+}
+
+.back-button {
+  @include m.button;
+}
+
+.character-card {
+  background: v.$button_color;
+  box-shadow: v.$card_shadow;
+}
+
+.character-header {
+  background: #f8f9fa;
+  padding: 20px;
+  border-bottom: v.$button_border;
+
+  .character-name {
+    margin: 0;
+    color: v.$main_font_color;
+    font-size: 2rem;
+  }
+
+  .character-id {
+    color: v.$secondary_font_color;
+    font-size: 1rem;
+  }
+}
+
+.character-content {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 30px;
+  padding: 30px;
+}
+
+.character-image {
+  img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: v.$card_shadow;
+  }
+}
+
+.character-info {
+  .info-section {
+    margin-bottom: 25px;
+
+    h3 {
+      margin: 0 0 15px 0;
+      color: v.$main_font_color;
+      border-bottom: v.$button-hover-border;
+      border-width: 2px;
+      padding-bottom: 5px;
+    }
+  }
+
+  .info-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: v.$button_border;
+
+    .label {
+      color: v.$main_font_color;
+    }
+
+    .value {
+      color: v.$secondary_font_color;
+    }
+  }
+}

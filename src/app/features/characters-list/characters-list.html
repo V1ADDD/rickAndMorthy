@@ -25,10 +25,7 @@
   <div class="container">
     <div
       *cdkVirtualFor="let character of dataSource"
-      (click)="someFunc()"
-      (keypress)="someFunc()"
-      tabindex="0"
-      role="button"
+      [routerLink]="character.id + ''"
       class="character-info"
     >
       <h2 [title]="character.name">{{ character.name | truncate }}</h2>
@@ -39,7 +36,7 @@
       }
       <p appToggleStatus="{{ character.status }}"></p>
       <p>Species: {{ character.species }}</p>
-      <p>{{ character.type }}</p>
+      <p>Type: {{ character.type || 'Not specified' }}</p>
       <p>Gender: {{ character.gender }}</p>
       <p>Origin: {{ character.origin.name }}</p>
       <p>Location: {{ character.location.name }}</p>
