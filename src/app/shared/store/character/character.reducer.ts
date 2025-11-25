@@ -5,6 +5,7 @@ import {
   addCharactersFailure,
   addCharactersSuccess,
   resetCharacters,
+  updateCharacter,
 } from './character.action';
 import { createEntityAdapter, Dictionary } from '@ngrx/entity';
 import { Character } from '../../models/character';
@@ -42,6 +43,9 @@ const charactersFeature = createFeature({
       isLoading: false,
       error: error.error.error,
     })),
+    on(updateCharacter, (state: CharactersState, { character }) => {
+      return adapter.updateOne({ id: character.id, changes: character }, state);
+    }),
   ),
   extraSelectors: ({ selectCharactersState }) => {
     const adapterSelectors = adapter.getSelectors(selectCharactersState);

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { selectError, selectIsLoading } from '../../shared/store/character/character.reducer';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CharacterGender, CharacterStatus } from '../../shared/models/character';
+import { Character, CharacterGender, CharacterStatus } from '../../shared/models/character';
 import { FavoritesService } from '../../shared/services/favorites.service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollDataSource } from '../../shared/data-source/infinite-scroll.data-source';
@@ -12,6 +12,10 @@ import { ToggleStatus } from '../../shared/directives/toggle-status';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { EditCharacterModal } from '../edit-character-modal/edit-character-modal';
+import { take, tap } from 'rxjs';
+import { updateCharacter } from '../../shared/store/character/character.action';
 
 @Component({
   selector: 'app-characters-list',
@@ -33,6 +37,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class CharactersList implements OnInit {
   private store = inject(Store);
   private favoritesService = inject(FavoritesService);
+  private dialog = inject(MatDialog);
   public dataSource = inject(InfiniteScrollDataSource);
 
   public isLoading$ = this.store.select(selectIsLoading);
@@ -75,5 +80,24 @@ export class CharactersList implements OnInit {
     this.favoritesService.toggleFavorites(id);
 
     this.favorites.set(this.favoritesService.getFavorites());
+  }
+
+  public openEditModal(character: Character, event: Event): void {
+    event.stopPropagation();
+
+    const dialogRef = this.dialog.open(EditCharacterModal, {
+      width: '400px',
+      data: character,
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(
+        take(1),
+        tap((val: Character) => {
+          this.store.dispatch(updateCharacter({ character: val }));
+        }),
+      )
+      .subscribe();
   }
 }

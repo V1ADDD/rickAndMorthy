@@ -1,0 +1,35 @@
+<h2>Edit {{ data.name }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="editForm" class="edit-form">
+    <label for="species">Species</label>
+    <input id="species" formControlName="species" />
+
+    <label for="type">Type</label>
+    <input id="type" formControlName="type" />
+
+    <label for="gender">Gender</label>
+    <select id="gender" formControlName="gender">
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Genderless">Genderless</option>
+      <option value="unknown">Unknown</option>
+    </select>
+
+    <label for="status">Status</label>
+    <select id="status" formControlName="status">
+      <option value="Alive">Alive</option>
+      <option value="Dead">Dead</option>
+      <option value="unknown">Unknown</option>
+    </select>
+
+    <label for="origin">Origin</label>
+    <input id="origin" formControlName="originName" />
+
+    <label for="location">Location</label>
+    <input id="location" formControlName="locationName" />
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button (click)="onCancel()">Cancel</button>
+  <button (click)="onSave()" [disabled]="!editForm.valid">Save</button>
+</mat-dialog-actions>

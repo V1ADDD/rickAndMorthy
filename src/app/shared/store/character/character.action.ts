@@ -1,5 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { CharacterGender, CharacterStatus, ResponseCharacters } from '../../models/character';
+import {
+  Character,
+  CharacterGender,
+  CharacterStatus,
+  ResponseCharacters,
+} from '../../models/character';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export const addCharacters = createAction(
@@ -22,4 +27,9 @@ export const addCharactersSuccess = createAction(
 export const addCharactersFailure = createAction(
   '[Characters] Add Characters Failure',
   props<{ error: HttpErrorResponse }>(),
+);
+
+export const updateCharacter = createAction(
+  '[Characters] Update Character',
+  props<{ character: Character }>(),
 );

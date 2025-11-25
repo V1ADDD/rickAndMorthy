@@ -2,11 +2,6 @@
 <form (submit)="searchCharacter()">
   <label for="search">Find character:</label>
   <input id="search" list="list" name="search" [(ngModel)]="searchSignal" autocomplete="on" />
-  <!-- <datalist id="list">
-    @for (name of names$ | async; track $index) {
-      <option [value]="name"></option>
-    }
-  </datalist> -->
 </form>
 <div class="filter">
   <select [(ngModel)]="statusFilter" (change)="filterStatus()">
@@ -46,14 +41,16 @@
     >
       <div class="card-header">
         <h2 [title]="character.name">{{ character.name | truncate }}</h2>
-        <button mat-icon-button (click)="toggleFavorite(character.id, $event)">
-          <mat-icon
-            (click)="toggleFavorite(character.id, $event)"
-            [class.favorite]="favorites().includes(character.id)"
-          >
-            {{ favorites().includes(character.id) ? 'star' : 'star_border' }}
-          </mat-icon>
-        </button>
+        <div class="card-actions">
+          <button mat-icon-button (click)="openEditModal(character, $event)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="toggleFavorite(character.id, $event)">
+            <mat-icon [class.favorite]="favorites().includes(character.id)">
+              {{ favorites().includes(character.id) ? 'star' : 'star_border' }}
+            </mat-icon>
+          </button>
+        </div>
       </div>
       <img [src]="character.image" alt="character" />
       <p appToggleStatus="{{ character.status }}"></p>
