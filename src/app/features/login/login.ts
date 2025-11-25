@@ -51,7 +51,7 @@ export class Login implements OnInit {
     return this.form.get('password')!;
   }
 
-  public onSubmit() {
+  public onSubmit(): void {
     if (this.form.valid) {
       this.signinService
         .authUser(this.login.value, this.password.value)

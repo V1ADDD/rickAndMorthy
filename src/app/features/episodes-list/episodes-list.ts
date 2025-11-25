@@ -1,5 +1,5 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   selectAll,
@@ -11,10 +11,11 @@ import {
 import { loadEpisodes } from '../../shared/store/episode/episode.action';
 import { EpisodesService } from '../../shared/services/episodes.service';
 import { Observable, take, tap } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-episodes-list',
-  imports: [AsyncPipe, DatePipe],
+  imports: [AsyncPipe, DatePipe, MatButtonModule],
   templateUrl: './episodes-list.html',
   styleUrl: './episodes-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,12 +30,15 @@ export class EpisodesList implements OnInit {
   public next$ = this.store.select(selectNext);
   public prev$ = this.store.select(selectPrev);
 
+  public currentPage = signal(1);
+
   public ngOnInit(): void {
     this.loadPage(1);
   }
 
   public loadPage(episode: number): void {
     this.store.dispatch(loadEpisodes({ currentPage: episode }));
+    this.currentPage.set(episode);
   }
 
   public loadPageUrl(page: Observable<string | null>): void {

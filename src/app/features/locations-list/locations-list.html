@@ -14,9 +14,16 @@
     }
   </div>
   <div class="pagination">
-    <button (click)="loadPage(1)" [disabled]="(prev$ | async) === null">first</button>
-    <button (click)="loadPageUrl(prev$)" [disabled]="(prev$ | async) === null">prev</button>
-    <button (click)="loadPageUrl(next$)" [disabled]="(next$ | async) === null">next</button>
-    <button (click)="loadLastPage()" [disabled]="(next$ | async) === null">last</button>
+    <button mat-icon-button (click)="loadPage(1)" [disabled]="(prev$ | async) === null">1</button>
+    <button mat-icon-button (click)="loadPageUrl(prev$)" [disabled]="(prev$ | async) === null">
+      <
+    </button>
+    <button mat-icon-button disabled="true">{{ currentPage() }}</button>
+    <button mat-icon-button (click)="loadPageUrl(next$)" [disabled]="(next$ | async) === null">
+      >
+    </button>
+    <button mat-icon-button (click)="loadLastPage()" [disabled]="(next$ | async) === null">
+      {{ pages$ | async }}
+    </button>
   </div>
 }
