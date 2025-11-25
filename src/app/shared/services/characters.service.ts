@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Character, ResponseCharacters } from '../models/character';
+import {
+  Character,
+  CharacterGender,
+  CharacterStatus,
+  ResponseCharacters,
+} from '../models/character';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +18,11 @@ export class CharactersService {
   public getCharacters(
     page: number,
     name: string,
-    filter: 'Alive' | 'Dead' | 'unknown' | '',
+    filterStatus: CharacterStatus,
+    filterGender: CharacterGender,
   ): Observable<ResponseCharacters> {
     return this.http.get<ResponseCharacters>(
-      `${this.API_URL}/?name=${name}&status=${filter}&page=${page}`,
+      `${this.API_URL}/?name=${name}&status=${filterStatus}&gender=${filterGender}&page=${page}`,
     );
   }
 

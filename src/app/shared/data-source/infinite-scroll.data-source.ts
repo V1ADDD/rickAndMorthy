@@ -2,7 +2,7 @@ import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, merge, Observable, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { Character, CharacterStatus } from '../models/character';
+import { Character, CharacterGender, CharacterStatus } from '../models/character';
 import { selectAll, selectNext, selectIsLoading } from '../store/character/character.reducer';
 import { addCharacters, resetCharacters } from '../store/character/character.action';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,6 +22,7 @@ export class InfiniteScrollDataSource extends DataSource<Character> {
 
   public searchTerm = signal<string>('');
   public filterStatus = signal<CharacterStatus>('');
+  public filterGender = signal<CharacterGender>('');
 
   public connect(collectionViewer: CollectionViewer): Observable<Character[]> {
     merge(
@@ -80,7 +81,8 @@ export class InfiniteScrollDataSource extends DataSource<Character> {
       addCharacters({
         currentPage: page,
         search: this.searchTerm(),
-        filter: this.filterStatus(),
+        filterStatus: this.filterStatus(),
+        filterGender: this.filterGender(),
       }),
     );
   }

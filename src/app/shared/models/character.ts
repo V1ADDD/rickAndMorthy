@@ -4,7 +4,7 @@ export interface Character {
   status: CharacterStatus;
   species: string;
   type: string;
-  gender: 'Male' | 'Female' | 'Genderless' | 'unknown';
+  gender: CharacterGender;
   origin: {
     name: string;
     url: string;
@@ -20,6 +20,7 @@ export interface Character {
 }
 
 export type CharacterStatus = 'Alive' | 'Dead' | 'unknown' | '';
+export type CharacterGender = 'Male' | 'Female' | 'Genderless' | 'unknown' | '';
 
 export interface ResponseCharacters {
   info: {

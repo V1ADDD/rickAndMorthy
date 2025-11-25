@@ -9,11 +9,22 @@
   </datalist> -->
 </form>
 <div class="filter">
-  @for (filter of filters; track $index) {
-    <button (click)="filterStatus(filter)" [disabled]="filterSignal() === filter">
-      {{ filter ? filter : 'All' }}
-    </button>
-  }
+  <select [(ngModel)]="statusFilter" (change)="filterStatus()">
+    <option value="">Select status</option>
+    @for (filter of statusFilters; track $index) {
+      <option [value]="filter">
+        {{ filter }}
+      </option>
+    }
+  </select>
+  <select [(ngModel)]="genderFilter" (change)="filterGender()">
+    <option value="">Select gender</option>
+    @for (filter of genderFilters; track $index) {
+      <option [value]="filter">
+        {{ filter }}
+      </option>
+    }
+  </select>
 </div>
 
 @if (error$ | async) {

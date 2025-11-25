@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { selectError, selectIsLoading } from '../../shared/store/character/character.reducer';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CharacterStatus } from '../../shared/models/character';
+import { CharacterGender, CharacterStatus } from '../../shared/models/character';
 import { FavoritesService } from '../../shared/services/favorites.service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollDataSource } from '../../shared/data-source/infinite-scroll.data-source';
@@ -40,21 +40,28 @@ export class CharactersList implements OnInit {
 
   public favorites = signal<number[]>([]);
   public searchSignal = signal('');
-  public filterSignal = signal<CharacterStatus>('');
+  public statusFilter = signal<CharacterStatus>('');
+  public genderFilter = signal<CharacterGender>('');
 
-  public filters: CharacterStatus[] = ['', 'Alive', 'Dead', 'unknown'];
+  public statusFilters: CharacterStatus[] = ['Alive', 'Dead', 'unknown'];
+  public genderFilters: CharacterGender[] = ['Male', 'Female', 'Genderless', 'unknown'];
 
   public ngOnInit(): void {
     this.dataSource.searchTerm.set(this.searchSignal());
-    this.dataSource.filterStatus.set(this.filterSignal());
+    this.dataSource.filterStatus.set(this.statusFilter());
+    this.dataSource.filterGender.set(this.genderFilter());
     this.favorites.set(this.favoritesService.getFavorites());
 
     this.dataSource.reset();
   }
 
-  public filterStatus(status: CharacterStatus): void {
-    this.filterSignal.set(status);
-    this.dataSource.filterStatus.set(status);
+  public filterStatus(): void {
+    this.dataSource.filterStatus.set(this.statusFilter());
+    this.dataSource.reset();
+  }
+
+  public filterGender(): void {
+    this.dataSource.filterGender.set(this.genderFilter());
     this.dataSource.reset();
   }
 

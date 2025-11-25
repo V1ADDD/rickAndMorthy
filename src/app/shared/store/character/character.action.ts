@@ -1,10 +1,15 @@
 import { createAction, props } from '@ngrx/store';
-import { CharacterStatus, ResponseCharacters } from '../../models/character';
+import { CharacterGender, CharacterStatus, ResponseCharacters } from '../../models/character';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export const addCharacters = createAction(
   '[Characters] Add Characters',
-  props<{ currentPage: number; search: string; filter: CharacterStatus }>(),
+  props<{
+    currentPage: number;
+    search: string;
+    filterStatus: CharacterStatus;
+    filterGender: CharacterGender;
+  }>(),
 );
 
 export const resetCharacters = createAction('[Characters] Reset Characters');

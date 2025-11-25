@@ -13,8 +13,8 @@ export class CharacterEffects {
   public loadCharacters$ = createEffect(() =>
     this.actions$.pipe(
       ofType(addCharacters),
-      mergeMap(({ currentPage, search, filter }) =>
-        this.charactersService.getCharacters(currentPage, search, filter).pipe(
+      mergeMap(({ currentPage, search, filterStatus, filterGender }) =>
+        this.charactersService.getCharacters(currentPage, search, filterStatus, filterGender).pipe(
           map((characters) => addCharactersSuccess({ characters: characters })),
           catchError((error: HttpErrorResponse) =>
             of(
