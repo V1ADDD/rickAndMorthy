@@ -9,10 +9,24 @@ import {
 } from '../../shared/store/favorites/favorites.reducer';
 import { loadFavorites, toggleFavorite } from '../../shared/store/favorites/favorites.action';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ToggleStatus } from '../../shared/directives/toggle-status';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { TruncatePipe } from '../../shared/pipes/truncate-pipe';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-favorites-list',
-  imports: [AsyncPipe, ScrollingModule, DatePipe],
+  imports: [
+    AsyncPipe,
+    ScrollingModule,
+    DatePipe,
+    ToggleStatus,
+    MatIconModule,
+    MatButtonModule,
+    TruncatePipe,
+    RouterLink,
+  ],
   templateUrl: './favorites-list.html',
   styleUrl: './favorites-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +43,9 @@ export class FavoritesList implements OnInit {
     this.store.dispatch(loadFavorites({ ids: this.favoritesService.getFavorites() }));
   }
 
-  public toggleFavorite(id: number) {
+  public toggleFavorite(id: number, event: MouseEvent): void {
+    event.stopPropagation();
+
     this.favoritesService.toggleFavorites(id);
     this.store.dispatch(toggleFavorite({ toggleId: id }));
   }

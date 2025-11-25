@@ -29,4 +29,8 @@ export class CharactersService {
     const match = url.match(/[?&]page=(\d+)/);
     return match ? parseInt(match[1], 10) : 1;
   }
+
+  public getCharacterById(id: number): Observable<Character> {
+    return this.http.get<Character>(`${this.API_URL}/${id}`);
+  }
 }

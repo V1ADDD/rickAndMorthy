@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './shared/guards/auth-guard';
 import { loginGuard } from './shared/guards/login-guard';
-import { characterGuard } from './shared/guards/character-guard';
 
 export const routes: Routes = [
   {
@@ -24,7 +23,7 @@ export const routes: Routes = [
     path: 'characters/:id',
     loadComponent: () =>
       import('./features/character-info/character-info').then((comp) => comp.CharacterInfo),
-    canMatch: [authGuard, characterGuard],
+    canMatch: [authGuard],
   },
   {
     path: 'locations',

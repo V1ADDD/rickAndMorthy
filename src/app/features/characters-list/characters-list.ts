@@ -1,11 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {
-  selectError,
-  selectFavoritesByIds,
-  selectIsLoading,
-  selectNames,
-} from '../../shared/store/character/character.reducer';
+import { selectError, selectIsLoading } from '../../shared/store/character/character.reducer';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CharacterStatus } from '../../shared/models/character';
@@ -15,6 +10,8 @@ import { InfiniteScrollDataSource } from '../../shared/data-source/infinite-scro
 import { TruncatePipe } from '../../shared/pipes/truncate-pipe';
 import { ToggleStatus } from '../../shared/directives/toggle-status';
 import { RouterLink } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-characters-list',
@@ -26,6 +23,8 @@ import { RouterLink } from '@angular/router';
     TruncatePipe,
     ToggleStatus,
     RouterLink,
+    MatIconModule,
+    MatButtonModule,
   ],
   templateUrl: './characters-list.html',
   styleUrl: './characters-list.scss',
@@ -36,11 +35,10 @@ export class CharactersList implements OnInit {
   private favoritesService = inject(FavoritesService);
   public dataSource = inject(InfiniteScrollDataSource);
 
-  public favorites$ = this.store.select(selectFavoritesByIds(this.favoritesService.getFavorites()));
-  public names$ = this.store.select(selectNames);
   public isLoading$ = this.store.select(selectIsLoading);
   public error$ = this.store.select(selectError);
 
+  public favorites = signal<number[]>([]);
   public searchSignal = signal('');
   public filterSignal = signal<CharacterStatus>('');
 
@@ -49,6 +47,7 @@ export class CharactersList implements OnInit {
   public ngOnInit(): void {
     this.dataSource.searchTerm.set(this.searchSignal());
     this.dataSource.filterStatus.set(this.filterSignal());
+    this.favorites.set(this.favoritesService.getFavorites());
 
     this.dataSource.reset();
   }
@@ -67,6 +66,7 @@ export class CharactersList implements OnInit {
   public toggleFavorite(id: number, event: MouseEvent): void {
     event.stopPropagation();
     this.favoritesService.toggleFavorites(id);
-    this.favorites$ = this.store.select(selectFavoritesByIds(this.favoritesService.getFavorites()));
+
+    this.favorites.set(this.favoritesService.getFavorites());
   }
 }

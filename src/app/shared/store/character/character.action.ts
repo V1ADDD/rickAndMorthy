@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { CharacterStatus, ResponseCharacters } from '../../models/character';
-import { ResponseError } from '../../models/error';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export const addCharacters = createAction(
   '[Characters] Add Characters',
@@ -16,5 +16,5 @@ export const addCharactersSuccess = createAction(
 
 export const addCharactersFailure = createAction(
   '[Characters] Add Characters Failure',
-  props<{ error: ResponseError }>(),
+  props<{ error: HttpErrorResponse }>(),
 );

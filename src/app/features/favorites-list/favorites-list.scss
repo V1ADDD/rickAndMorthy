@@ -7,7 +7,21 @@
   @include m.card;
 
   button {
-    @include m.button;
-    width: 100%;
+    margin: 0;
+    vertical-align: top;
+  }
+
+  .favorite {
+    color: #ffd740;
+  }
+
+  &:hover {
+    scale: 0.99;
+    cursor: pointer;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
   }
 }

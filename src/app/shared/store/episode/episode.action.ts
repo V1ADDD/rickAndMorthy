@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { ResponseEpisodes } from '../../models/episode';
-import { ResponseError } from '../../models/error';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export const loadEpisodes = createAction(
   '[Episodes] Load Episodes',
@@ -14,5 +14,5 @@ export const loadEpisodesSuccess = createAction(
 
 export const loadEpisodesFailure = createAction(
   '[Episodes] Load Episodes Failure',
-  props<{ error: ResponseError }>(),
+  props<{ error: HttpErrorResponse }>(),
 );

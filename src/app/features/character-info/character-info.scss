@@ -1,17 +1,16 @@
 @use '../../shared/styles/mixins' as m;
 @use '../../shared/styles/variables' as v;
-
-.character-details-container {
-  margin: 20px;
-}
+@use '../../shared/styles/error';
 
 .back-button {
   @include m.button;
+  margin-left: 20px;
 }
 
 .character-card {
   background: v.$button_color;
   box-shadow: v.$card_shadow;
+  margin: 20px;
 }
 
 .character-header {

@@ -7,13 +7,23 @@
   }
   <cdk-virtual-scroll-viewport itemSize="300" orientation="horizontal" class="viewport">
     <div class="container">
-      <div *cdkVirtualFor="let character of favorites$ | async" class="character-info">
-        <h2>{{ character.name }}</h2>
+      <div
+        *cdkVirtualFor="let character of favorites$ | async"
+        class="character-info"
+        [routerLink]="'/characters/' + character.id"
+      >
+        <div class="card-header">
+          <h2 [title]="character.name">{{ character.name | truncate }}</h2>
+          <button mat-icon-button (click)="toggleFavorite(character.id, $event)">
+            <mat-icon (click)="toggleFavorite(character.id, $event)" class="favorite">
+              star
+            </mat-icon>
+          </button>
+        </div>
         <img [src]="character.image" alt="character" />
-        <button (click)="toggleFavorite(character.id)">Toggle favorite</button>
-        <p>Status: {{ character.status }}</p>
+        <p appToggleStatus="{{ character.status }}"></p>
         <p>Species: {{ character.species }}</p>
-        <p>{{ character.type }}</p>
+        <p>Type: {{ character.type || 'Not specified' }}</p>
         <p>Gender: {{ character.gender }}</p>
         <p>Origin: {{ character.origin.name }}</p>
         <p>Location: {{ character.location.name }}</p>

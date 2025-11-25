@@ -1,6 +1,6 @@
 import { Episode } from '../../models/episode';
 import { EntityState } from '@ngrx/entity';
-import { ResponseError } from '../../models/error';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface EpisodesState extends EntityState<Episode> {
   isLoading: boolean;
@@ -8,5 +8,5 @@ export interface EpisodesState extends EntityState<Episode> {
   pages: number;
   next: string | null;
   prev: string | null;
-  error: ResponseError | null;
+  error: HttpErrorResponse | null;
 }

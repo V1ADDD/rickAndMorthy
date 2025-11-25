@@ -1,12 +1,12 @@
 <h1>Characters</h1>
 <form (submit)="searchCharacter()">
   <label for="search">Find character:</label>
-  <input id="search" list="list" name="search" [(ngModel)]="searchSignal" autocomplete="off" />
-  <datalist id="list">
+  <input id="search" list="list" name="search" [(ngModel)]="searchSignal" autocomplete="on" />
+  <!-- <datalist id="list">
     @for (name of names$ | async; track $index) {
       <option [value]="name"></option>
     }
-  </datalist>
+  </datalist> -->
 </form>
 <div class="filter">
   @for (filter of filters; track $index) {
@@ -33,12 +33,18 @@
       [routerLink]="character.id + ''"
       class="character-info"
     >
-      <h2 [title]="character.name">{{ character.name | truncate }}</h2>
+      <div class="card-header">
+        <h2 [title]="character.name">{{ character.name | truncate }}</h2>
+        <button mat-icon-button (click)="toggleFavorite(character.id, $event)">
+          <mat-icon
+            (click)="toggleFavorite(character.id, $event)"
+            [class.favorite]="favorites().includes(character.id)"
+          >
+            {{ favorites().includes(character.id) ? 'star' : 'star_border' }}
+          </mat-icon>
+        </button>
+      </div>
       <img [src]="character.image" alt="character" />
-      <button (click)="toggleFavorite(character.id, $event)">Toggle favorite</button>
-      @if ((favorites$ | async)?.includes(character)) {
-        <p class="favorite">Favorite</p>
-      }
       <p appToggleStatus="{{ character.status }}"></p>
       <p>Species: {{ character.species }}</p>
       <p>Type: {{ character.type || 'Not specified' }}</p>
