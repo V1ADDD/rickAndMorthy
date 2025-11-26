@@ -1,7 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { CharactersService } from '../../services/characters.service';
-import { loadFavorites, loadFavoritesFailure, loadFavoritesSuccess } from './favorites.action';
+import {
+  loadFavorites,
+  loadFavoritesFailure,
+  loadFavoritesSuccess,
+} from '../favorites/favorites.action';
 import { catchError, map, mergeMap, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 

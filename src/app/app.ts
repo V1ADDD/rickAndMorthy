@@ -1,8 +1,9 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { SigninService } from './shared/services/signin.service';
 import { AsyncPipe, TitleCasePipe } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
+import { selectUser } from './shared/store/user/user.reducer';
+import { resetUser } from './shared/store/user/user.action';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +14,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class App {
   protected readonly title = signal('rickAndMorthy');
 
+  private store = inject(Store);
   private router = inject(Router);
-  private destroyRef = inject(DestroyRef);
-  private signinService = inject(SigninService);
 
-  public user$ = this.signinService.getMe().pipe(takeUntilDestroyed(this.destroyRef));
+  public user$ = this.store.select(selectUser);
 
   public tabs = ['characters', 'favorites', 'locations', 'episodes'];
 
@@ -30,8 +30,8 @@ export class App {
   }
 
   public logOut(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
+    localStorage.clear();
+    this.store.dispatch(resetUser());
     this.router.navigate(['login']);
   }
 }

@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { addCharacters, addCharactersFailure, addCharactersSuccess } from './character.action';
+import {
+  addCharacters,
+  addCharactersFailure,
+  addCharactersSuccess,
+} from '../character/character.action';
 import { catchError, map, mergeMap, of } from 'rxjs';
 import { CharactersService } from '../../services/characters.service';
 import { HttpErrorResponse } from '@angular/common/http';

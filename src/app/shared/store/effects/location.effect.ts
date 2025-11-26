@@ -1,7 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of } from 'rxjs';
-import { loadLocations, loadLocationsFailure, loadLocationsSuccess } from './location.action';
+import {
+  loadLocations,
+  loadLocationsFailure,
+  loadLocationsSuccess,
+} from '../location/location.action';
 import { LocationsService } from '../../services/locations.service';
 import { HttpErrorResponse } from '@angular/common/http';
 

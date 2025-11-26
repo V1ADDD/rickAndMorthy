@@ -11,15 +11,17 @@ import { provideStore } from '@ngrx/store';
 import { charactersReducer } from './shared/store/character/character.reducer';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideEffects } from '@ngrx/effects';
-import { CharacterEffects } from './shared/store/character/character.effect';
+import { CharacterEffects } from './shared/store/effects/character.effect';
 import { locationsReducer } from './shared/store/location/location.reducer';
-import { LocationEffects } from './shared/store/location/location.effect';
+import { LocationEffects } from './shared/store/effects/location.effect';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { episodesReducer } from './shared/store/episode/episode.reducer';
-import { EpisodeEffects } from './shared/store/episode/episode.effect';
+import { EpisodeEffects } from './shared/store/effects/episode.effect';
 import { favoritesReducer } from './shared/store/favorites/favorites.reducer';
-import { FavoritesEffects } from './shared/store/favorites/favorites.effect';
+import { FavoritesEffects } from './shared/store/effects/favorites.effect';
 import { authInterceptor } from './shared/interceptors/auth-interceptor';
+import { userReducer } from './shared/store/user/user.reducer';
+import { UserEffects } from './shared/store/effects/user.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,8 +33,15 @@ export const appConfig: ApplicationConfig = {
       characters: charactersReducer,
       locations: locationsReducer,
       episodes: episodesReducer,
+      user: userReducer,
     }),
-    provideEffects([CharacterEffects, LocationEffects, EpisodeEffects, FavoritesEffects]),
+    provideEffects([
+      CharacterEffects,
+      LocationEffects,
+      EpisodeEffects,
+      FavoritesEffects,
+      UserEffects,
+    ]),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideStoreDevtools({
       maxAge: 25,

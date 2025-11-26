@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -13,11 +6,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { SigninService } from '../../shared/services/signin.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, of, tap } from 'rxjs';
-import { ErrorAuth } from '../../shared/models/auth';
-import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { addUser } from '../../shared/store/user/user.action';
+import { selectErrorUser, selectUser } from '../../shared/store/user/user.reducer';
 
 @Component({
   selector: 'app-login',
@@ -32,9 +23,10 @@ export class Login implements OnInit {
   public responseError = signal('');
 
   private fb = inject(FormBuilder);
-  private signinService = inject(SigninService);
-  private destroyRef = inject(DestroyRef);
-  private router = inject(Router);
+  private store = inject(Store);
+
+  public userSig = this.store.selectSignal(selectUser);
+  public errorSig = this.store.selectSignal(selectErrorUser);
 
   public ngOnInit(): void {
     this.form = this.fb.group({
@@ -53,24 +45,7 @@ export class Login implements OnInit {
 
   public onSubmit(): void {
     if (this.form.valid) {
-      this.signinService
-        .authUser(this.form.value)
-        .pipe(
-          catchError((error: ErrorAuth) => {
-            this.responseError.set(error.error.message);
-            return of(null);
-          }),
-          tap((user) => {
-            if (user && 'accessToken' in user) {
-              this.responseError.set('');
-              localStorage.setItem('token', user.accessToken);
-              localStorage.setItem('refreshToken', user.refreshToken);
-              this.router.navigate(['/characters']);
-            }
-          }),
-          takeUntilDestroyed(this.destroyRef),
-        )
-        .subscribe();
+      this.store.dispatch(addUser({ credentials: this.form.value }));
     } else {
       this.form.markAllAsTouched();
     }

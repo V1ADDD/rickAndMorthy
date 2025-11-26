@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of } from 'rxjs';
-import { loadEpisodes, loadEpisodesFailure, loadEpisodesSuccess } from './episode.action';
+import { loadEpisodes, loadEpisodesFailure, loadEpisodesSuccess } from '../episode/episode.action';
 import { EpisodesService } from '../../services/episodes.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
