@@ -10,6 +10,11 @@ export interface ResponseUser {
   refreshToken: string;
 }
 
+export interface authCredentials {
+  username: string;
+  password: string;
+}
+
 export interface ErrorAuth {
   error: {
     message: string;

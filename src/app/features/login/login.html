@@ -1,13 +1,13 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <h2>Sign In</h2>
-  <label for="login">Login</label>
-  <input id="login" name="login" formControlName="login" />
+  <label for="username">Username</label>
+  <input id="username" name="username" formControlName="username" />
   <label for="password">Password</label>
   <input id="password" name="password" formControlName="password" type="password" />
-  @if (login.invalid && (login.dirty || login.touched)) {
+  @if (username.invalid && (username.dirty || username.touched)) {
     <p class="error">
-      Email is
-      @if (login.value === '') {
+      Username is
+      @if (username.value === '') {
         required!
       } @else {
         too short!

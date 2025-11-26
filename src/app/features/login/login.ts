@@ -38,13 +38,13 @@ export class Login implements OnInit {
 
   public ngOnInit(): void {
     this.form = this.fb.group({
-      login: ['', [Validators.required, Validators.minLength(3)]],
+      username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
-  public get login(): AbstractControl {
-    return this.form.get('login')!;
+  public get username(): AbstractControl {
+    return this.form.get('username')!;
   }
 
   public get password(): AbstractControl {
@@ -54,7 +54,7 @@ export class Login implements OnInit {
   public onSubmit(): void {
     if (this.form.valid) {
       this.signinService
-        .authUser(this.login.value, this.password.value)
+        .authUser(this.form.value)
         .pipe(
           catchError((error: ErrorAuth) => {
             this.responseError.set(error.error.message);
