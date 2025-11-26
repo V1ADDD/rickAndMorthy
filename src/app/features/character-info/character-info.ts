@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ToggleStatus } from '../../shared/directives/toggle-status';
@@ -12,6 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   imports: [AsyncPipe, DatePipe, ToggleStatus, RouterLink],
   templateUrl: './character-info.html',
   styleUrl: './character-info.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CharacterInfo implements OnInit {
   private charactersService = inject(CharactersService);
