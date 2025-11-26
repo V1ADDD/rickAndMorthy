@@ -56,7 +56,6 @@ export class Login implements OnInit {
       this.signinService
         .authUser(this.login.value, this.password.value)
         .pipe(
-          takeUntilDestroyed(this.destroyRef),
           catchError((error: ErrorAuth) => {
             this.responseError.set(error.error.message);
             return of(null);
@@ -69,6 +68,7 @@ export class Login implements OnInit {
               this.router.navigate(['/characters']);
             }
           }),
+          takeUntilDestroyed(this.destroyRef),
         )
         .subscribe();
     } else {

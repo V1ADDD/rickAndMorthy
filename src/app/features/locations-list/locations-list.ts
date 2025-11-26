@@ -1,5 +1,12 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   selectAll,
@@ -12,6 +19,7 @@ import { loadLocations } from '../../shared/store/location/location.action';
 import { Observable, take, tap } from 'rxjs';
 import { LocationsService } from '../../shared/services/locations.service';
 import { MatButtonModule } from '@angular/material/button';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-locations-list',
@@ -23,6 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class LocationsList implements OnInit {
   private store = inject(Store);
   private locationsService = inject(LocationsService);
+  private destroyRef = inject(DestroyRef);
 
   public locations$ = this.store.select(selectAll);
   public isLoading$ = this.store.select(selectIsLoading);
@@ -48,6 +57,7 @@ export class LocationsList implements OnInit {
         tap((pageUrl) => {
           this.loadPage(this.locationsService.getPageFromUrl(pageUrl));
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
   }
@@ -59,6 +69,7 @@ export class LocationsList implements OnInit {
         tap((pageCount) => {
           this.loadPage(pageCount);
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
   }

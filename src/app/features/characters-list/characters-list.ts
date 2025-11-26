@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectError, selectIsLoading } from '../../shared/store/character/character.reducer';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -16,6 +23,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditCharacterModal } from '../edit-character-modal/edit-character-modal';
 import { take, tap } from 'rxjs';
 import { updateCharacter } from '../../shared/store/character/character.action';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-characters-list',
@@ -38,6 +46,7 @@ export class CharactersList implements OnInit {
   private store = inject(Store);
   private favoritesService = inject(FavoritesService);
   private dialog = inject(MatDialog);
+  private destroyRef = inject(DestroyRef);
   public dataSource = inject(InfiniteScrollDataSource);
 
   public isLoading$ = this.store.select(selectIsLoading);
@@ -97,6 +106,7 @@ export class CharactersList implements OnInit {
         tap((val: Character) => {
           this.store.dispatch(updateCharacter({ character: val }));
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
   }

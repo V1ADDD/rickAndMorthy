@@ -1,5 +1,12 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   selectAll,
@@ -12,6 +19,7 @@ import { loadEpisodes } from '../../shared/store/episode/episode.action';
 import { EpisodesService } from '../../shared/services/episodes.service';
 import { Observable, take, tap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-episodes-list',
@@ -23,6 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class EpisodesList implements OnInit {
   private store = inject(Store);
   private episodesService = inject(EpisodesService);
+  private destroyRef = inject(DestroyRef);
 
   public episodes$ = this.store.select(selectAll);
   public isLoading$ = this.store.select(selectIsLoading);
@@ -48,6 +57,7 @@ export class EpisodesList implements OnInit {
         tap((pageUrl) => {
           this.loadPage(this.episodesService.getPageFromUrl(pageUrl));
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
   }
@@ -59,6 +69,7 @@ export class EpisodesList implements OnInit {
         tap((pageCount) => {
           this.loadPage(pageCount);
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
   }
