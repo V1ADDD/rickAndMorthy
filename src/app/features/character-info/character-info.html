@@ -1,6 +1,8 @@
 <div class="character-details-container">
   <button class="back-button" [routerLink]="'/characters'">← Go back</button>
-
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
   @if (character$ | async; as character) {
     <div class="character-card">
       <div class="character-header">
@@ -63,7 +65,5 @@
         </div>
       </div>
     </div>
-  } @else {
-    <p class="error">{{ error }}</p>
   }
 </div>

@@ -57,7 +57,7 @@ export class InfiniteScrollDataSource extends DataSource<Character> {
   }
 
   public disconnect(): void {
-    // Пусто чтоб иметь возможность вернуться на страницу со скроллом
+    this._dataStream.next([]);
   }
 
   private _handleScroll(range: { start: number; end: number }): void {
