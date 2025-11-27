@@ -18,6 +18,11 @@ export const addUserFailure = createAction(
 
 export const addCurrentUser = createAction('[User] Add Current User');
 
+export const addCurrentUserFailure = createAction(
+  '[User] Add Current User Failure',
+  props<{ error: HttpErrorResponse }>(),
+);
+
 export const updateUser = createAction('[User] Update User');
 
 export const updateUserSuccess = createAction(

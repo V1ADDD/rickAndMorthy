@@ -26,7 +26,7 @@ const favoritesFeature = createFeature({
       error: null,
     })),
     on(loadFavoritesSuccess, (state: FavoritesState, { favorites }) => {
-      return adapter.setAll(favorites, { ...state, isLoading: false });
+      return adapter.setMany(favorites, { ...state, isLoading: false });
     }),
     on(loadFavoritesFailure, (state: FavoritesState, { error }) => ({
       ...state,

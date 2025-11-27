@@ -17,8 +17,8 @@ export class FavoritesEffects {
   public loadFavorites$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadFavorites),
-      mergeMap(({ ids }) =>
-        this.charactersService.getCharactersById(ids).pipe(
+      mergeMap(({ ids }) => {
+        return this.charactersService.getCharactersById(ids).pipe(
           map((favorites) => loadFavoritesSuccess({ favorites: favorites })),
           catchError((error: HttpErrorResponse) =>
             of(
@@ -27,8 +27,8 @@ export class FavoritesEffects {
               }),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     ),
   );
 }

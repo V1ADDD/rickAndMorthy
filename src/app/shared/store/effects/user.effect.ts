@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, of, withLatestFrom } from 'rxjs';
+import { catchError, map, mergeMap, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SigninService } from '../../services/signin.service';
 import {
   addCurrentUser,
+  addCurrentUserFailure,
   addUser,
   addUserFailure,
   addUserSuccess,
@@ -12,7 +13,6 @@ import {
   updateUserSuccess,
 } from '../user/user.action';
 import { ResponseUser, Tokens } from '../../models/auth';
-import { selectUser } from '../user/user.reducer';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -53,7 +53,7 @@ export class UserEffects {
           }),
           catchError((error: HttpErrorResponse) =>
             of(
-              addUserFailure({
+              addCurrentUserFailure({
                 error: error,
               }),
             ),
@@ -65,25 +65,23 @@ export class UserEffects {
   public updateUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(updateUser),
-      withLatestFrom(selectUser),
-      mergeMap((user) =>
-        this.signinService.refreshToken(user!.refreshToken).pipe(
-          map(
-            (tokens: Tokens) => {
-              localStorage.setItem('token', tokens.accessToken);
-              localStorage.setItem('refreshToken', tokens.refreshToken);
-              return updateUserSuccess({ newTokens: tokens as Tokens });
-            },
-            catchError((error: HttpErrorResponse) =>
-              of(
-                addUserFailure({
-                  error: error,
-                }),
-              ),
+      mergeMap(() => {
+        const refreshToken = localStorage.getItem('refreshToken');
+        return this.signinService.refreshToken(refreshToken!).pipe(
+          map((tokens: Tokens) => {
+            localStorage.setItem('token', tokens.accessToken);
+            localStorage.setItem('refreshToken', tokens.refreshToken);
+            return updateUserSuccess({ newTokens: tokens as Tokens });
+          }),
+          catchError((error: HttpErrorResponse) =>
+            of(
+              addUserFailure({
+                error: error,
+              }),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     ),
   );
 }

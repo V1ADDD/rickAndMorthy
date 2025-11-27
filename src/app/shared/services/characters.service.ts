@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import {
   Character,
   CharacterGender,
@@ -27,6 +27,8 @@ export class CharactersService {
   }
 
   public getCharactersById(ids: number[]): Observable<Character[]> {
+    if (ids.length === 1)
+      return this.http.get<Character>(`${this.API_URL}/${ids.join(',')}`).pipe(map((val) => [val]));
     return this.http.get<Character[]>(`${this.API_URL}/${ids.join(',')}`);
   }
 

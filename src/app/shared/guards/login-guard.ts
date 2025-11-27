@@ -1,18 +1,21 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, RedirectCommand, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { addCurrentUser } from '../store/user/user.action';
+import { selectIsLoadingUser, selectUser } from '../store/user/user.reducer';
+import { combineLatest, map, skipWhile, take } from 'rxjs';
 
 export const loginGuard: CanMatchFn = () => {
   const store = inject(Store);
   const router = inject(Router);
 
-  const token = localStorage.getItem('token');
-
-  if (token) {
-    store.dispatch(addCurrentUser());
-    return new RedirectCommand(router.parseUrl('/characters'));
-  } else {
-    return true;
-  }
+  return combineLatest([store.select(selectUser), store.select(selectIsLoadingUser)]).pipe(
+    skipWhile(([, loading]) => loading === true),
+    take(1),
+    map(([user]) => {
+      if (user) {
+        return new RedirectCommand(router.parseUrl('/characters'));
+      }
+      return true;
+    }),
+  );
 };

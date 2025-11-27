@@ -1,9 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AsyncPipe, TitleCasePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { selectUser } from './shared/store/user/user.reducer';
-import { resetUser } from './shared/store/user/user.action';
+import { addCurrentUser, resetUser } from './shared/store/user/user.action';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ import { resetUser } from './shared/store/user/user.action';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('rickAndMorthy');
 
   private store = inject(Store);
@@ -20,6 +20,10 @@ export class App {
   public user$ = this.store.select(selectUser);
 
   public tabs = ['characters', 'favorites', 'locations', 'episodes'];
+
+  public ngOnInit(): void {
+    this.store.dispatch(addCurrentUser());
+  }
 
   public isActive(route: string): boolean {
     return this.router.url === route;

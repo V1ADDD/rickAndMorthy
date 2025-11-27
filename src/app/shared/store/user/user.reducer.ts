@@ -2,6 +2,7 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import { initialUserState, UserState } from './user.store';
 import {
   addCurrentUser,
+  addCurrentUserFailure,
   addUser,
   addUserFailure,
   addUserSuccess,
@@ -53,6 +54,11 @@ const charactersFeature = createFeature({
       ...state,
       isLoading: true,
       error: null,
+    })),
+    on(addCurrentUserFailure, (state: UserState) => ({
+      ...state,
+      isLoading: false,
+      error: 'Please log in!',
     })),
   ),
 });

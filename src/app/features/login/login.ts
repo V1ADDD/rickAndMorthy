@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { addUser } from '../../shared/store/user/user.action';
-import { selectErrorUser, selectUser } from '../../shared/store/user/user.reducer';
+import { selectErrorUser, selectIsLoadingUser } from '../../shared/store/user/user.reducer';
 
 @Component({
   selector: 'app-login',
@@ -20,12 +20,10 @@ import { selectErrorUser, selectUser } from '../../shared/store/user/user.reduce
 export class Login implements OnInit {
   public form!: FormGroup;
 
-  public responseError = signal('');
-
   private fb = inject(FormBuilder);
   private store = inject(Store);
 
-  public userSig = this.store.selectSignal(selectUser);
+  public isLoadingSig = this.store.selectSignal(selectIsLoadingUser);
   public errorSig = this.store.selectSignal(selectErrorUser);
 
   public ngOnInit(): void {

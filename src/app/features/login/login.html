@@ -24,11 +24,14 @@
       }
     </p>
   }
-  @if (responseError()) {
-    <p class="error">{{ responseError() }}</p>
+  @if (errorSig()) {
+    <p class="error">{{ errorSig() }}</p>
+  }
+  @if (isLoadingSig()) {
+    <p>Loading...</p>
   }
   <div class="navigation">
     <button type="reset">Reset</button>
-    <button type="submit" [disabled]="!form.valid">Submit</button>
+    <button type="submit" [disabled]="!form.valid || isLoadingSig()">Submit</button>
   </div>
 </form>
