@@ -7,11 +7,14 @@ import {
   signal,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectError, selectIsLoading } from '../../shared/store/character/character.reducer';
+import {
+  selectError,
+  selectFavorites,
+  selectIsLoading,
+} from '../../shared/store/character/character.reducer';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Character, CharacterGender, CharacterStatus } from '../../shared/models/character';
-import { FavoritesService } from '../../shared/services/favorites.service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollDataSource } from '../../shared/data-source/infinite-scroll.data-source';
 import { TruncatePipe } from '../../shared/pipes/truncate-pipe';
@@ -22,7 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { EditCharacterModal } from '../edit-character-modal/edit-character-modal';
 import { take, tap } from 'rxjs';
-import { updateCharacter } from '../../shared/store/character/character.action';
+import { toggleFavorite, updateCharacter } from '../../shared/store/character/character.action';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -44,15 +47,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class CharactersList implements OnInit {
   private store = inject(Store);
-  private favoritesService = inject(FavoritesService);
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
   public dataSource = inject(InfiniteScrollDataSource);
 
   public isLoading$ = this.store.select(selectIsLoading);
   public error$ = this.store.select(selectError);
+  public favoritesSig = this.store.selectSignal(selectFavorites);
 
-  public favorites = signal<number[]>([]);
   public searchSignal = signal('');
   public statusFilter = signal<CharacterStatus>('');
   public genderFilter = signal<CharacterGender>('');
@@ -64,7 +66,6 @@ export class CharactersList implements OnInit {
     this.dataSource.searchTerm.set(this.searchSignal());
     this.dataSource.filterStatus.set(this.statusFilter());
     this.dataSource.filterGender.set(this.genderFilter());
-    this.favorites.set(this.favoritesService.getFavorites());
 
     this.dataSource.reset();
   }
@@ -86,9 +87,7 @@ export class CharactersList implements OnInit {
 
   public toggleFavorite(id: number, event: MouseEvent): void {
     event.stopPropagation();
-    this.favoritesService.toggleFavorites(id);
-
-    this.favorites.set(this.favoritesService.getFavorites());
+    this.store.dispatch(toggleFavorite({ id: id }));
   }
 
   public openEditModal(character: Character, event: Event): void {

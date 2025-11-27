@@ -26,10 +26,19 @@ export const addCharactersSuccess = createAction(
 
 export const addCharactersFailure = createAction(
   '[Characters] Add Characters Failure',
-  props<{ error: HttpErrorResponse }>(),
+  props<{ error: Partial<HttpErrorResponse> }>(),
 );
 
 export const updateCharacter = createAction(
   '[Characters] Update Character',
   props<{ character: Character }>(),
 );
+
+export const addFavorites = createAction('[Characters] Add Favorites');
+
+export const addFavoritesSuccess = createAction(
+  '[Characters] Add Favorites Success',
+  props<{ characters: Character[] }>(),
+);
+
+export const toggleFavorite = createAction('[Characters] Toggle Favorite', props<{ id: number }>());

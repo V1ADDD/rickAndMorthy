@@ -23,7 +23,9 @@ const charactersFeature = createFeature({
     on(resetUser, () => initialUserState),
     on(addUserSuccess, (state: UserState, { user }) => ({
       ...state,
-      user: user,
+      username: user.username,
+      accessToken: user.accessToken,
+      refreshToken: user.refreshToken,
       isLoading: false,
     })),
     on(addUserFailure, (state: UserState, { error }) => ({
@@ -41,12 +43,7 @@ const charactersFeature = createFeature({
       localStorage.setItem('refreshToken', newTokens.refreshToken);
       return {
         ...state,
-        user: state.user
-          ? {
-              ...state.user,
-              ...newTokens,
-            }
-          : null,
+        ...newTokens,
         isLoading: false,
       };
     }),
@@ -67,5 +64,7 @@ export const {
   reducer: userReducer,
   selectIsLoading: selectIsLoadingUser,
   selectError: selectErrorUser,
-  selectUser,
+  selectUsername,
+  selectAccessToken,
+  selectRefreshToken,
 } = charactersFeature;

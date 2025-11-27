@@ -1,13 +1,15 @@
-import { ResponseUser } from '../../models/auth';
-
 export interface UserState {
-  user: ResponseUser | null;
+  username: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   isLoading: boolean;
   error: string | null;
 }
 
 export const initialUserState: UserState = {
-  user: null,
+  username: null,
+  accessToken: null,
+  refreshToken: null,
   isLoading: false,
   error: null,
 };

@@ -1,13 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { AsyncPipe, TitleCasePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { selectUser } from './shared/store/user/user.reducer';
+import { selectUsername } from './shared/store/user/user.reducer';
 import { addCurrentUser, resetUser } from './shared/store/user/user.action';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, AsyncPipe, TitleCasePipe],
+  imports: [RouterOutlet, RouterLink, TitleCasePipe],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -17,7 +17,7 @@ export class App implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
 
-  public user$ = this.store.select(selectUser);
+  public userSig = this.store.selectSignal(selectUsername);
 
   public tabs = ['characters', 'favorites', 'locations', 'episodes'];
 
@@ -30,7 +30,7 @@ export class App implements OnInit {
   }
 
   public isGuest(): boolean {
-    return !this.tabs.includes(this.router.url.slice(1).split('/')[0]);
+    return !localStorage.getItem('token');
   }
 
   public logOut(): void {

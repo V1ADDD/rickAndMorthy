@@ -46,8 +46,8 @@
             <mat-icon>edit</mat-icon>
           </button>
           <button mat-icon-button (click)="toggleFavorite(character.id, $event)">
-            <mat-icon [class.favorite]="favorites().includes(character.id)">
-              {{ favorites().includes(character.id) ? 'star' : 'star_border' }}
+            <mat-icon [class.favorite]="favoritesSig().includes(character.id)">
+              {{ favoritesSig().includes(character.id) ? 'star' : 'star_border' }}
             </mat-icon>
           </button>
         </div>

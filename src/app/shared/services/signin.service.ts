@@ -13,7 +13,7 @@ export class SigninService {
   public authUser(credentials: authCredentials): Observable<ResponseUser> {
     return this.http.post<ResponseUser>(`${this.API_URL}/login`, {
       ...credentials,
-      expiresInMins: 1,
+      expiresInMins: 15,
     });
   }
 

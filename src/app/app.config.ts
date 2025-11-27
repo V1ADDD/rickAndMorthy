@@ -17,8 +17,6 @@ import { LocationEffects } from './shared/store/effects/location.effect';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { episodesReducer } from './shared/store/episode/episode.reducer';
 import { EpisodeEffects } from './shared/store/effects/episode.effect';
-import { favoritesReducer } from './shared/store/favorites/favorites.reducer';
-import { FavoritesEffects } from './shared/store/effects/favorites.effect';
 import { authInterceptor } from './shared/interceptors/auth-interceptor';
 import { userReducer } from './shared/store/user/user.reducer';
 import { UserEffects } from './shared/store/effects/user.effect';
@@ -29,19 +27,12 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideStore({
-      favorites: favoritesReducer,
       characters: charactersReducer,
       locations: locationsReducer,
       episodes: episodesReducer,
       user: userReducer,
     }),
-    provideEffects([
-      CharacterEffects,
-      LocationEffects,
-      EpisodeEffects,
-      FavoritesEffects,
-      UserEffects,
-    ]),
+    provideEffects([CharacterEffects, LocationEffects, EpisodeEffects, UserEffects]),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideStoreDevtools({
       maxAge: 25,

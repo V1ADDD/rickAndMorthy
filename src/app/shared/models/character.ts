@@ -26,6 +26,7 @@ export interface ResponseCharacters {
   info: {
     count: number;
     pages: number;
+    favorites: number[];
     next: string;
     prev: string;
   };

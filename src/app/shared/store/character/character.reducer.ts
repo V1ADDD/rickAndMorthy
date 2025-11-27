@@ -1,19 +1,23 @@
-import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import { CharactersState } from './character.store';
 import {
   addCharacters,
   addCharactersFailure,
   addCharactersSuccess,
+  addFavorites,
+  addFavoritesSuccess,
   resetCharacters,
+  toggleFavorite,
   updateCharacter,
 } from './character.action';
-import { createEntityAdapter, Dictionary } from '@ngrx/entity';
+import { createEntityAdapter } from '@ngrx/entity';
 import { Character } from '../../models/character';
 
 export const adapter = createEntityAdapter<Character>();
 
 export const initialCharactersState: CharactersState = adapter.getInitialState({
   isLoading: false,
+  favorites: [],
   count: 0,
   pages: 0,
   next: null,
@@ -38,13 +42,35 @@ const charactersFeature = createFeature({
         isLoading: false,
       });
     }),
-    on(addCharactersFailure, (state: CharactersState, { error }) => ({
-      ...state,
-      isLoading: false,
-      error: error.error.error,
-    })),
+    on(addCharactersFailure, (state: CharactersState, { error }) => {
+      return adapter.removeAll({ ...state, isLoading: false, error: error.error.error });
+    }),
     on(updateCharacter, (state: CharactersState, { character }) => {
       return adapter.updateOne({ id: character.id, changes: character }, state);
+    }),
+    on(addFavorites, (state: CharactersState) => ({
+      ...state,
+      isLoading: true,
+      error: null,
+    })),
+    on(addFavoritesSuccess, (state: CharactersState, { characters }) => {
+      return adapter.setAll(characters, {
+        ...state,
+        favorites: characters.map((char) => char.id),
+        isLoading: false,
+      });
+    }),
+    on(toggleFavorite, (state: CharactersState, { id }) => {
+      const favorites =
+        state.favorites.indexOf(id) !== -1
+          ? state.favorites.filter((val) => val !== id)
+          : [...state.favorites, id];
+      localStorage.setItem('favorites', favorites.join(','));
+      return {
+        ...state,
+        favorites: favorites,
+        error: null,
+      };
     }),
   ),
   extraSelectors: ({ selectCharactersState }) => {
@@ -52,12 +78,6 @@ const charactersFeature = createFeature({
 
     return {
       ...adapterSelectors,
-      selectFavoritesByIds: (idList: number[]) =>
-        createSelector(adapterSelectors.selectEntities, (entities: Dictionary<Character>) => {
-          return idList
-            .map((id) => entities[id])
-            .filter((character): character is Character => character !== undefined);
-        }),
     };
   },
 });
@@ -68,5 +88,5 @@ export const {
   selectAll,
   selectNext,
   selectError,
-  selectFavoritesByIds,
+  selectFavorites,
 } = charactersFeature;

@@ -44,6 +44,10 @@ function getAccessToken(): string | null {
   return localStorage.getItem('token');
 }
 
+function getRefreshToken(): string | null {
+  return localStorage.getItem('refreshToken');
+}
+
 function shouldSkipInterceptor(req: HttpRequest<unknown>, accessToken: string | null): boolean {
   return req.url.includes('/refresh') || !accessToken;
 }
@@ -61,9 +65,7 @@ function handleHttpError(
   store: Store,
   router: Router,
 ): Observable<HttpEvent<unknown>> {
-  const accessToken = getAccessToken();
-
-  if (error.status === 401 && accessToken) {
+  if (error.status === 401 && getAccessToken() && getRefreshToken()) {
     return handleUnauthorizedError(req, next, store, router);
   }
 
@@ -85,29 +87,27 @@ function handleUnauthorizedError(
   return combineLatest([store.select(selectIsLoadingUser)]).pipe(
     skipWhile(([loading]) => loading === true),
     take(1),
-    switchMap(() => handleTokenRefreshResult(req, next, router, store)),
+    switchMap(() => handleTokenRefreshResult(req, next, store)),
+    catchError(() => {
+      handleCleanupAndRedirect(router);
+      return throwError(() => new Error('Token refresh failed'));
+    }),
   );
 }
 
 function handleTokenRefreshResult(
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
-  router: Router,
   store: Store,
 ): Observable<HttpEvent<unknown>> {
   const newAccessToken = getAccessToken();
-
-  if (newAccessToken) {
-    const retryReq = addAuthorizationHeader(req, newAccessToken);
-    store.dispatch(addCurrentUser());
-    return next(retryReq);
-  }
-
-  handleCleanupAndRedirect(router);
-  return throwError(() => new Error('Token refresh failed'));
+  const retryReq = addAuthorizationHeader(req, newAccessToken!);
+  store.dispatch(addCurrentUser());
+  return next(retryReq);
 }
 
 function handleCleanupAndRedirect(router: Router): void {
   localStorage.removeItem('token');
+  localStorage.removeItem('refreshToken');
   router.navigate(['/login']);
 }
