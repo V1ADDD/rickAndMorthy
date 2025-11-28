@@ -1,12 +1,5 @@
-import { AsyncPipe, DatePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   selectAll,
@@ -17,13 +10,11 @@ import {
 } from '../../shared/store/episode/episode.reducer';
 import { loadEpisodes } from '../../shared/store/episode/episode.action';
 import { EpisodesService } from '../../shared/services/episodes.service';
-import { Observable, take, tap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-episodes-list',
-  imports: [AsyncPipe, DatePipe, MatButtonModule],
+  imports: [DatePipe, MatButtonModule],
   templateUrl: './episodes-list.html',
   styleUrl: './episodes-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,13 +22,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class EpisodesList implements OnInit {
   private store = inject(Store);
   private episodesService = inject(EpisodesService);
-  private destroyRef = inject(DestroyRef);
 
-  public episodes$ = this.store.select(selectAll);
-  public isLoading$ = this.store.select(selectIsLoading);
-  public pages$ = this.store.select(selectPages);
-  public next$ = this.store.select(selectNext);
-  public prev$ = this.store.select(selectPrev);
+  public episodesSig = this.store.selectSignal(selectAll);
+  public isLoadingSig = this.store.selectSignal(selectIsLoading);
+  public pagesSig = this.store.selectSignal(selectPages);
+  public nextSig = this.store.selectSignal(selectNext);
+  public prevSig = this.store.selectSignal(selectPrev);
 
   public currentPage = signal(1);
 
@@ -50,27 +40,11 @@ export class EpisodesList implements OnInit {
     this.currentPage.set(episode);
   }
 
-  public loadPageUrl(page: Observable<string | null>): void {
-    page
-      .pipe(
-        take(1),
-        tap((pageUrl) => {
-          this.loadPage(this.episodesService.getPageFromUrl(pageUrl));
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  public loadPageUrl(page: string | null): void {
+    this.loadPage(this.episodesService.getPageFromUrl(page));
   }
 
   public loadLastPage(): void {
-    this.pages$
-      .pipe(
-        take(1),
-        tap((pageCount) => {
-          this.loadPage(pageCount);
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+    this.loadPage(this.pagesSig());
   }
 }

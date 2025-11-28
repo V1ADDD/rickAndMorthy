@@ -4,7 +4,7 @@
       <li>Login Page</li>
     } @else {
       @for (tab of tabs; track $index) {
-        <li [routerLink]="'/' + tab" [class.active]="isActive('/' + tab)">{{ tab | titlecase }}</li>
+        <li [routerLink]="tab" [class.active]="isActive(tab)">{{ tab | titlecase }}</li>
       }
       <li (click)="logOut()" (keypress)="logOut()" tabindex="0" role="button">Logout</li>
       <li>{{ userSig() }}</li>

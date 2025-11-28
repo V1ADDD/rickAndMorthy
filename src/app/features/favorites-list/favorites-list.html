@@ -13,7 +13,7 @@
         <div
           *cdkVirtualFor="let character of favoritesSig()"
           class="character-info"
-          [routerLink]="'/characters/' + character.id"
+          [routerLink]="characterLink + '/' + character.id"
         >
           <div class="card-header">
             <h2 [title]="character.name">{{ character.name | truncate }}</h2>

@@ -6,6 +6,7 @@ import { CharactersService } from '../../shared/services/characters.service';
 import { catchError, Observable, of } from 'rxjs';
 import { Character } from '../../shared/models/character';
 import { HttpErrorResponse } from '@angular/common/http';
+import { routePath } from '../../shared/consts/routePath.const';
 
 @Component({
   selector: 'app-character-info',
@@ -20,6 +21,7 @@ export class CharacterInfo implements OnInit {
 
   public character$?: Observable<Character | null>;
   public error?: string;
+  public charactersLink = routePath.characters;
 
   public ngOnInit(): void {
     this.character$ = this.charactersService

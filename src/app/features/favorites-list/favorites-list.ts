@@ -13,6 +13,7 @@ import {
   selectIsLoading,
 } from '../../shared/store/character/character.reducer';
 import { addFavorites, toggleFavorite } from '../../shared/store/character/character.action';
+import { routePath } from '../../shared/consts/routePath.const';
 
 @Component({
   selector: 'app-favorites-list',
@@ -35,6 +36,7 @@ export class FavoritesList implements OnInit {
   public favoritesSig = this.store.selectSignal(selectAll);
   public isLoadingSig = this.store.selectSignal(selectIsLoading);
   public errorSig = this.store.selectSignal(selectError);
+  public characterLink = routePath.characters;
 
   public ngOnInit(): void {
     this.store.dispatch(addFavorites());

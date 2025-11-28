@@ -1,10 +1,10 @@
 <h1>Locations</h1>
 
-@if (isLoading$ | async) {
+@if (isLoadingSig()) {
   <p>Загрузка...</p>
 } @else {
   <div class="container">
-    @for (location of locations$ | async; track $index) {
+    @for (location of locationsSig(); track $index) {
       <div class="location-info">
         <h2>{{ location.name }}</h2>
         <p>Type: {{ location.type }}</p>
@@ -14,16 +14,16 @@
     }
   </div>
   <div class="pagination">
-    <button mat-icon-button (click)="loadPage(1)" [disabled]="(prev$ | async) === null">1</button>
-    <button mat-icon-button (click)="loadPageUrl(prev$)" [disabled]="(prev$ | async) === null">
+    <button mat-icon-button (click)="loadPage(1)" [disabled]="prevSig() === null">1</button>
+    <button mat-icon-button (click)="loadPageUrl(prevSig())" [disabled]="prevSig() === null">
       <
     </button>
     <button mat-icon-button disabled="true">{{ currentPage() }}</button>
-    <button mat-icon-button (click)="loadPageUrl(next$)" [disabled]="(next$ | async) === null">
+    <button mat-icon-button (click)="loadPageUrl(nextSig())" [disabled]="nextSig() === null">
       >
     </button>
-    <button mat-icon-button (click)="loadLastPage()" [disabled]="(next$ | async) === null">
-      {{ pages$ | async }}
+    <button mat-icon-button (click)="loadLastPage()" [disabled]="nextSig() === null">
+      {{ pagesSig() }}
     </button>
   </div>
 }

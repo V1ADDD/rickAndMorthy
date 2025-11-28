@@ -12,7 +12,7 @@ import {
   selectFavorites,
   selectIsLoading,
 } from '../../shared/store/character/character.reducer';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Character, CharacterGender, CharacterStatus } from '../../shared/models/character';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -27,11 +27,11 @@ import { EditCharacterModal } from '../edit-character-modal/edit-character-modal
 import { take, tap } from 'rxjs';
 import { toggleFavorite, updateCharacter } from '../../shared/store/character/character.action';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { genderFilters, statusFilters } from '../../shared/consts/filters.const';
 
 @Component({
   selector: 'app-characters-list',
   imports: [
-    AsyncPipe,
     FormsModule,
     ScrollingModule,
     DatePipe,
@@ -51,37 +51,37 @@ export class CharactersList implements OnInit {
   private destroyRef = inject(DestroyRef);
   public dataSource = inject(InfiniteScrollDataSource);
 
-  public isLoading$ = this.store.select(selectIsLoading);
-  public error$ = this.store.select(selectError);
+  public isLoadingSig = this.store.selectSignal(selectIsLoading);
+  public errorSig = this.store.selectSignal(selectError);
   public favoritesSig = this.store.selectSignal(selectFavorites);
 
-  public searchSignal = signal('');
-  public statusFilter = signal<CharacterStatus>('');
-  public genderFilter = signal<CharacterGender>('');
+  public searchSig = signal('');
+  public statusFilterSig = signal<CharacterStatus>('');
+  public genderFilterSig = signal<CharacterGender>('');
 
-  public statusFilters: CharacterStatus[] = ['Alive', 'Dead', 'unknown'];
-  public genderFilters: CharacterGender[] = ['Male', 'Female', 'Genderless', 'unknown'];
+  public statusFilters = statusFilters;
+  public genderFilters = genderFilters;
 
   public ngOnInit(): void {
-    this.dataSource.searchTerm.set(this.searchSignal());
-    this.dataSource.filterStatus.set(this.statusFilter());
-    this.dataSource.filterGender.set(this.genderFilter());
+    this.dataSource.searchTerm.set(this.searchSig());
+    this.dataSource.filterStatus.set(this.statusFilterSig());
+    this.dataSource.filterGender.set(this.genderFilterSig());
 
     this.dataSource.reset();
   }
 
   public filterStatus(): void {
-    this.dataSource.filterStatus.set(this.statusFilter());
+    this.dataSource.filterStatus.set(this.statusFilterSig());
     this.dataSource.reset();
   }
 
   public filterGender(): void {
-    this.dataSource.filterGender.set(this.genderFilter());
+    this.dataSource.filterGender.set(this.genderFilterSig());
     this.dataSource.reset();
   }
 
   public searchCharacter(): void {
-    this.dataSource.searchTerm.set(this.searchSignal());
+    this.dataSource.searchTerm.set(this.searchSig());
     this.dataSource.reset();
   }
 
