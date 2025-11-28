@@ -75,7 +75,6 @@ export class CharacterEffects {
           .getItem('favorites')
           ?.split(',')
           .map((v) => +v);
-        console.log(favorites?.toString());
         if (!favorites || favorites.toString() === '0')
           return of(
             addCharactersFailure({

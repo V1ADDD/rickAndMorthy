@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ToggleStatus } from '../../shared/directives/toggle-status';
@@ -25,6 +25,7 @@ import { routePath } from '../../shared/consts/routePath.const';
     MatButtonModule,
     TruncatePipe,
     RouterLink,
+    NgOptimizedImage,
   ],
   templateUrl: './favorites-list.html',
   styleUrl: './favorites-list.scss',

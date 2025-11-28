@@ -12,7 +12,7 @@ import {
   selectFavorites,
   selectIsLoading,
 } from '../../shared/store/character/character.reducer';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Character, CharacterGender, CharacterStatus } from '../../shared/models/character';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -40,6 +40,7 @@ import { genderFilters, statusFilters } from '../../shared/consts/filters.const'
     RouterLink,
     MatIconModule,
     MatButtonModule,
+    NgOptimizedImage,
   ],
   templateUrl: './characters-list.html',
   styleUrl: './characters-list.scss',

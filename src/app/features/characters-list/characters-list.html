@@ -52,7 +52,9 @@
           </button>
         </div>
       </div>
-      <img [src]="character.image" alt="character" />
+      <div class="img-container">
+        <img [ngSrc]="character.image" width="300" height="300" priority [alt]="character.name" />
+      </div>
       <p appToggleStatus="{{ character.status }}"></p>
       <p>Species: {{ character.species }}</p>
       <p>Type: {{ character.type || 'Not specified' }}</p>

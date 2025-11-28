@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ToggleStatus } from '../../shared/directives/toggle-status';
 import { routePath } from '../../shared/consts/routePath.const';
@@ -13,7 +13,7 @@ import {
 
 @Component({
   selector: 'app-character-info',
-  imports: [DatePipe, ToggleStatus, RouterLink],
+  imports: [DatePipe, ToggleStatus, RouterLink, NgOptimizedImage],
   templateUrl: './character-info.html',
   styleUrl: './character-info.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
