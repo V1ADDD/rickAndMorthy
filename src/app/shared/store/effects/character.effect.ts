@@ -9,21 +9,35 @@ import {
   addFavorites,
   addFavoritesSuccess,
 } from '../character/character.action';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, map, mergeMap, of, share, withLatestFrom } from 'rxjs';
 import { CharactersService } from '../../services/characters.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FavoritesService } from '../../services/favorites.service';
+import {
+  selectCurrentPage,
+  selectFilterGender,
+  selectFilterStatus,
+  selectSearch,
+} from '../character/character.reducer';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class CharacterEffects {
   private actions$ = inject(Actions);
   private charactersService = inject(CharactersService);
   private favoritesService = inject(FavoritesService);
+  private store = inject(Store);
 
   public loadCharacters$ = createEffect(() =>
     this.actions$.pipe(
       ofType(addCharacters),
-      mergeMap(({ currentPage, search, filterStatus, filterGender }) => {
+      withLatestFrom(
+        this.store.select(selectCurrentPage),
+        this.store.select(selectSearch),
+        this.store.select(selectFilterStatus),
+        this.store.select(selectFilterGender),
+      ),
+      mergeMap(([, currentPage, search, filterStatus, filterGender]) => {
         const favorites = this.favoritesService.getFavorites();
         return this.charactersService
           .getCharacters(currentPage, search, filterStatus, filterGender)
@@ -40,6 +54,7 @@ export class CharacterEffects {
                 }),
               ),
             ),
+            share(),
           );
       }),
     ),

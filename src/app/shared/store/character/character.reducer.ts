@@ -11,6 +11,7 @@ import {
   resetCharacters,
   toggleFavorite,
   updateCharacter,
+  updateParams,
 } from './character.action';
 import { createEntityAdapter } from '@ngrx/entity';
 import { Character } from '../../models/character';
@@ -20,10 +21,11 @@ export const adapter = createEntityAdapter<Character>();
 export const initialCharactersState: CharactersState = adapter.getInitialState({
   isLoading: false,
   favorites: [],
-  count: 0,
   pages: 0,
-  next: null,
-  prev: null,
+  currentPage: 0,
+  search: '',
+  filterStatus: '',
+  filterGender: '',
   error: null,
 });
 
@@ -40,7 +42,9 @@ const charactersFeature = createFeature({
     on(addCharactersSuccess, (state: CharactersState, { characters }) => {
       return adapter.upsertMany(characters.results, {
         ...state,
-        ...characters.info,
+        pages: characters.info.pages,
+        favorites: characters.info.favorites,
+        currentPage: state.currentPage + 1,
         isLoading: false,
       });
     }),
@@ -50,11 +54,13 @@ const charactersFeature = createFeature({
     on(updateCharacter, (state: CharactersState, { character }) => {
       return adapter.updateOne({ id: character.id, changes: character }, state);
     }),
-    on(addCharacter, (state: CharactersState) => ({
-      ...state,
-      isLoading: true,
-      error: null,
-    })),
+    on(addCharacter, (state: CharactersState) => {
+      return {
+        ...state,
+        isLoading: true,
+        error: null,
+      };
+    }),
     on(addCharacterSuccess, (state: CharactersState, { character }) => {
       return adapter.setOne(character, {
         ...state,
@@ -85,6 +91,12 @@ const charactersFeature = createFeature({
         error: null,
       };
     }),
+    on(updateParams, (state: CharactersState, { params }) => ({
+      ...state,
+      search: params['search'] || '',
+      filterStatus: params['status'] || '',
+      filterGender: params['gender'] || '',
+    })),
   ),
   extraSelectors: ({ selectCharactersState }) => {
     const adapterSelectors = adapter.getSelectors(selectCharactersState);
@@ -99,7 +111,10 @@ export const {
   reducer: charactersReducer,
   selectIsLoading,
   selectAll,
-  selectNext,
   selectError,
   selectFavorites,
+  selectCurrentPage,
+  selectSearch,
+  selectFilterGender,
+  selectFilterStatus,
 } = charactersFeature;

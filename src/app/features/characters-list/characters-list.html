@@ -1,21 +1,21 @@
 <h1>Characters</h1>
-<form (submit)="searchCharacter()">
+<form (submit)="searchCharacter($event)">
   <label for="search">Find character:</label>
-  <input id="search" list="list" name="search" [(ngModel)]="searchSig" autocomplete="on" />
+  <input id="search" name="search" autocomplete="on" [value]="searchSig() || ''" />
 </form>
 <div class="filter">
-  <select [(ngModel)]="statusFilterSig" (change)="filterStatus()">
-    <option value="">Select status</option>
+  <select (change)="filterStatus($event)">
+    <option value="" [selected]="!statusSig()">Select status</option>
     @for (filter of statusFilters; track $index) {
-      <option [value]="filter">
+      <option [value]="filter" [selected]="statusSig() === filter">
         {{ filter }}
       </option>
     }
   </select>
-  <select [(ngModel)]="genderFilterSig" (change)="filterGender()">
-    <option value="">Select gender</option>
+  <select (change)="filterGender($event)">
+    <option value="" [selected]="!genderSig()">Select gender</option>
     @for (filter of genderFilters; track $index) {
-      <option [value]="filter">
+      <option [value]="filter" [selected]="genderSig() === filter">
         {{ filter }}
       </option>
     }
@@ -35,7 +35,7 @@
 <cdk-virtual-scroll-viewport itemSize="300" orientation="horizontal" class="viewport">
   <div class="container">
     <div
-      *cdkVirtualFor="let character of dataSource"
+      *cdkVirtualFor="let character of charactersSig()"
       [routerLink]="character.id + ''"
       class="character-info"
     >

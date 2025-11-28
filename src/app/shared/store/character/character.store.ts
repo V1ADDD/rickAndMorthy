@@ -1,12 +1,13 @@
-import { Character } from '../../models/character';
+import { Character, CharacterGender, CharacterStatus } from '../../models/character';
 import { EntityState } from '@ngrx/entity';
 
 export interface CharactersState extends EntityState<Character> {
   isLoading: boolean;
   favorites: number[];
-  count: number;
   pages: number;
-  next: string | null;
-  prev: string | null;
+  currentPage: number;
+  search: string;
+  filterStatus: CharacterStatus;
+  filterGender: CharacterGender;
   error: string | null;
 }

@@ -1,22 +1,18 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
+  selectAll,
   selectError,
   selectFavorites,
+  selectFilterGender,
+  selectFilterStatus,
   selectIsLoading,
+  selectSearch,
 } from '../../shared/store/character/character.reducer';
 import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Character, CharacterGender, CharacterStatus } from '../../shared/models/character';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { InfiniteScrollDataSource } from '../../shared/data-source/infinite-scroll.data-source';
 import { TruncatePipe } from '../../shared/pipes/truncate-pipe';
 import { ToggleStatus } from '../../shared/directives/toggle-status';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -25,7 +21,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { EditCharacterModal } from '../edit-character-modal/edit-character-modal';
 import { take, tap } from 'rxjs';
-import { toggleFavorite, updateCharacter } from '../../shared/store/character/character.action';
+import {
+  addCharacters,
+  resetCharacters,
+  toggleFavorite,
+  updateCharacter,
+  updateParams,
+} from '../../shared/store/character/character.action';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { genderFilters, statusFilters } from '../../shared/consts/filters.const';
 
@@ -52,66 +54,66 @@ export class CharactersList implements OnInit {
   private destroyRef = inject(DestroyRef);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  public dataSource = inject(InfiniteScrollDataSource);
 
+  public charactersSig = this.store.selectSignal(selectAll);
   public isLoadingSig = this.store.selectSignal(selectIsLoading);
   public errorSig = this.store.selectSignal(selectError);
   public favoritesSig = this.store.selectSignal(selectFavorites);
-
-  public searchSig = signal('');
-  public statusFilterSig = signal<CharacterStatus>('');
-  public genderFilterSig = signal<CharacterGender>('');
+  public searchSig = this.store.selectSignal(selectSearch);
+  public statusSig = this.store.selectSignal(selectFilterStatus);
+  public genderSig = this.store.selectSignal(selectFilterGender);
 
   public statusFilters = statusFilters;
   public genderFilters = genderFilters;
 
   public ngOnInit(): void {
-    const queryParams = this.route.snapshot.queryParams;
-    this.searchSig.set(queryParams['search'] || '');
-    this.statusFilterSig.set(queryParams['status'] || '');
-    this.genderFilterSig.set(queryParams['gender'] || '');
-
-    this.dataSource.searchTerm.set(this.searchSig());
-    this.dataSource.filterStatus.set(this.statusFilterSig());
-    this.dataSource.filterGender.set(this.genderFilterSig());
-
-    this.dataSource.reset();
+    this.updateUrlParams();
   }
 
-  public updateUrlParams(): void {
+  public updateUrlParams(
+    search: string | null = null,
+    status: CharacterStatus | null = null,
+    gender: CharacterGender | null = null,
+  ): void {
     const currentParams = { ...this.route.snapshot.queryParams };
-
-    const newParams = {
-      ...currentParams,
-      search: this.searchSig() || undefined,
-      status: this.statusFilterSig() || undefined,
-      gender: this.genderFilterSig() || undefined,
-    };
+    if (search !== null) {
+      if (!search) currentParams['search'] = undefined;
+      else currentParams['search'] = search;
+    }
+    if (status !== null) {
+      if (!status) currentParams['status'] = undefined;
+      else currentParams['status'] = status;
+    }
+    if (gender !== null) {
+      if (!gender) currentParams['gender'] = undefined;
+      else currentParams['gender'] = gender;
+    }
 
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: newParams,
+      queryParams: currentParams,
       queryParamsHandling: 'merge',
       replaceUrl: true,
     });
+
+    this.store.dispatch(resetCharacters());
+    this.store.dispatch(updateParams({ params: currentParams }));
+    this.store.dispatch(addCharacters());
   }
 
-  public filterStatus(): void {
-    this.updateUrlParams();
-    this.dataSource.filterStatus.set(this.statusFilterSig());
-    this.dataSource.reset();
+  public filterStatus(status: Event): void {
+    const selectedValue = (status.target as HTMLSelectElement).value;
+    this.updateUrlParams(null, selectedValue as CharacterStatus);
   }
 
-  public filterGender(): void {
-    this.updateUrlParams();
-    this.dataSource.filterGender.set(this.genderFilterSig());
-    this.dataSource.reset();
+  public filterGender(gender: Event): void {
+    const selectedValue = (gender.target as HTMLSelectElement).value;
+    this.updateUrlParams(null, null, selectedValue as CharacterGender);
   }
 
-  public searchCharacter(): void {
-    this.updateUrlParams();
-    this.dataSource.searchTerm.set(this.searchSig());
-    this.dataSource.reset();
+  public searchCharacter(search: Event): void {
+    const searchValue = (search.target as HTMLFormElement)['search'].value;
+    this.updateUrlParams(searchValue);
   }
 
   public toggleFavorite(id: number, event: MouseEvent): void {

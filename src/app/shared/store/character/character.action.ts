@@ -1,21 +1,9 @@
 import { createAction, props } from '@ngrx/store';
-import {
-  Character,
-  CharacterGender,
-  CharacterStatus,
-  ResponseCharacters,
-} from '../../models/character';
+import { Character, ResponseCharacters } from '../../models/character';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Params } from '@angular/router';
 
-export const addCharacters = createAction(
-  '[Characters] Add Characters',
-  props<{
-    currentPage: number;
-    search: string;
-    filterStatus: CharacterStatus;
-    filterGender: CharacterGender;
-  }>(),
-);
+export const addCharacters = createAction('[Characters] Add Characters');
 
 export const resetCharacters = createAction('[Characters] Reset Characters');
 
@@ -48,3 +36,5 @@ export const addFavoritesSuccess = createAction(
 );
 
 export const toggleFavorite = createAction('[Characters] Toggle Favorite', props<{ id: number }>());
+
+export const updateParams = createAction('[Characters] Update Params', props<{ params: Params }>());
