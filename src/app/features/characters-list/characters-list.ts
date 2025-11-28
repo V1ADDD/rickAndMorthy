@@ -19,7 +19,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollDataSource } from '../../shared/data-source/infinite-scroll.data-source';
 import { TruncatePipe } from '../../shared/pipes/truncate-pipe';
 import { ToggleStatus } from '../../shared/directives/toggle-status';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -49,6 +49,8 @@ export class CharactersList implements OnInit {
   private store = inject(Store);
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
   public dataSource = inject(InfiniteScrollDataSource);
 
   public isLoadingSig = this.store.selectSignal(selectIsLoading);
@@ -63,6 +65,11 @@ export class CharactersList implements OnInit {
   public genderFilters = genderFilters;
 
   public ngOnInit(): void {
+    const queryParams = this.route.snapshot.queryParams;
+    this.searchSig.set(queryParams['search'] || '');
+    this.statusFilterSig.set(queryParams['status'] || '');
+    this.genderFilterSig.set(queryParams['gender'] || '');
+
     this.dataSource.searchTerm.set(this.searchSig());
     this.dataSource.filterStatus.set(this.statusFilterSig());
     this.dataSource.filterGender.set(this.genderFilterSig());
@@ -70,17 +77,38 @@ export class CharactersList implements OnInit {
     this.dataSource.reset();
   }
 
+  public updateUrlParams(): void {
+    const currentParams = { ...this.route.snapshot.queryParams };
+
+    const newParams = {
+      ...currentParams,
+      search: this.searchSig() || undefined,
+      status: this.statusFilterSig() || undefined,
+      gender: this.genderFilterSig() || undefined,
+    };
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: newParams,
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
+
   public filterStatus(): void {
+    this.updateUrlParams();
     this.dataSource.filterStatus.set(this.statusFilterSig());
     this.dataSource.reset();
   }
 
   public filterGender(): void {
+    this.updateUrlParams();
     this.dataSource.filterGender.set(this.genderFilterSig());
     this.dataSource.reset();
   }
 
   public searchCharacter(): void {
+    this.updateUrlParams();
     this.dataSource.searchTerm.set(this.searchSig());
     this.dataSource.reset();
   }
