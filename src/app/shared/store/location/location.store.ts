@@ -4,9 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 export interface LocationsState extends EntityState<Location> {
   isLoading: boolean;
-  count: number;
   pages: number;
-  next: string | null;
-  prev: string | null;
+  currentPage: number;
   error: HttpErrorResponse | null;
 }

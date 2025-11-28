@@ -9,7 +9,7 @@ export const loadEpisodes = createAction(
 
 export const loadEpisodesSuccess = createAction(
   '[Episodes] Load Episodes Success',
-  props<{ episodes: ResponseEpisodes }>(),
+  props<{ episodes: ResponseEpisodes; page: number }>(),
 );
 
 export const loadEpisodesFailure = createAction(

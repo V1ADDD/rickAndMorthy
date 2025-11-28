@@ -8,10 +8,8 @@ export const adapter = createEntityAdapter<Location>();
 
 export const initialLocationsState: LocationsState = adapter.getInitialState({
   isLoading: false,
-  count: 0,
   pages: 0,
-  next: null,
-  prev: null,
+  currentPage: 1,
   error: null,
 });
 
@@ -24,8 +22,13 @@ const locationsFeature = createFeature({
       isLoading: true,
       error: null,
     })),
-    on(loadLocationsSuccess, (state: LocationsState, { locations }) => {
-      return adapter.setAll(locations.results, { ...state, ...locations.info, isLoading: false });
+    on(loadLocationsSuccess, (state: LocationsState, { locations, page }) => {
+      return adapter.setAll(locations.results, {
+        ...state,
+        pages: locations.info.pages,
+        currentPage: page,
+        isLoading: false,
+      });
     }),
     on(loadLocationsFailure, (state: LocationsState, { error }) => ({
       ...state,
@@ -43,7 +46,5 @@ export const {
   selectAll,
   selectIsLoading,
   selectPages,
-  selectCount,
-  selectNext,
-  selectPrev,
+  selectCurrentPage,
 } = locationsFeature;

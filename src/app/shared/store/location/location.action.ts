@@ -9,7 +9,7 @@ export const loadLocations = createAction(
 
 export const loadLocationsSuccess = createAction(
   '[Locations] Load Locations Success',
-  props<{ locations: ResponseLocations }>(),
+  props<{ locations: ResponseLocations; page: number }>(),
 );
 
 export const loadLocationsFailure = createAction(

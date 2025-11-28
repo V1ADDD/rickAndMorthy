@@ -8,10 +8,8 @@ export const adapter = createEntityAdapter<Episode>();
 
 export const initialEpisodesState: EpisodesState = adapter.getInitialState({
   isLoading: false,
-  count: 0,
   pages: 0,
-  next: null,
-  prev: null,
+  currentPage: 1,
   error: null,
 });
 
@@ -24,8 +22,13 @@ const episodesFeature = createFeature({
       isLoading: true,
       error: null,
     })),
-    on(loadEpisodesSuccess, (state: EpisodesState, { episodes }) => {
-      return adapter.setAll(episodes.results, { ...state, ...episodes.info, isLoading: false });
+    on(loadEpisodesSuccess, (state: EpisodesState, { episodes, page }) => {
+      return adapter.setAll(episodes.results, {
+        ...state,
+        pages: episodes.info.pages,
+        currentPage: page,
+        isLoading: false,
+      });
     }),
     on(loadEpisodesFailure, (state: EpisodesState, { error }) => ({
       ...state,
@@ -43,7 +46,5 @@ export const {
   selectAll,
   selectIsLoading,
   selectPages,
-  selectNext,
-  selectCount,
-  selectPrev,
+  selectCurrentPage,
 } = episodesFeature;

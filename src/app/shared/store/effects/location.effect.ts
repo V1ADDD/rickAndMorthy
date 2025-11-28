@@ -18,7 +18,7 @@ export class LocationEffects {
       ofType(loadLocations),
       mergeMap(({ currentPage }) =>
         this.locationsService.getLocations(currentPage).pipe(
-          map((locations) => loadLocationsSuccess({ locations: locations })),
+          map((locations) => loadLocationsSuccess({ locations: locations, page: currentPage })),
           catchError((error: HttpErrorResponse) =>
             of(
               loadLocationsFailure({

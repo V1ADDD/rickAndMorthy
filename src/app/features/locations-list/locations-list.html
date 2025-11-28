@@ -14,15 +14,27 @@
     }
   </div>
   <div class="pagination">
-    <button mat-icon-button (click)="loadPage(1)" [disabled]="prevSig() === null">1</button>
-    <button mat-icon-button (click)="loadPageUrl(prevSig())" [disabled]="prevSig() === null">
+    <button mat-icon-button (click)="loadPage(1)" [disabled]="currentPageSig() === 1">1</button>
+    <button
+      mat-icon-button
+      (click)="loadPage(currentPageSig() - 1)"
+      [disabled]="currentPageSig() === 1"
+    >
       <
     </button>
-    <button mat-icon-button disabled="true">{{ currentPage() }}</button>
-    <button mat-icon-button (click)="loadPageUrl(nextSig())" [disabled]="nextSig() === null">
+    <button mat-icon-button disabled="true">{{ currentPageSig() }}</button>
+    <button
+      mat-icon-button
+      (click)="loadPage(currentPageSig() + 1)"
+      [disabled]="currentPageSig() === pagesSig()"
+    >
       >
     </button>
-    <button mat-icon-button (click)="loadLastPage()" [disabled]="nextSig() === null">
+    <button
+      mat-icon-button
+      (click)="loadPage(pagesSig())"
+      [disabled]="currentPageSig() === pagesSig()"
+    >
       {{ pagesSig() }}
     </button>
   </div>

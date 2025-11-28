@@ -4,9 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 export interface EpisodesState extends EntityState<Episode> {
   isLoading: boolean;
-  count: number;
   pages: number;
-  next: string | null;
-  prev: string | null;
+  currentPage: number;
   error: HttpErrorResponse | null;
 }

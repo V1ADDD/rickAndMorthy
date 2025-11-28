@@ -14,7 +14,7 @@ export class EpisodeEffects {
       ofType(loadEpisodes),
       mergeMap(({ currentPage }) =>
         this.episodesService.getEpisodes(currentPage).pipe(
-          map((episodes) => loadEpisodesSuccess({ episodes: episodes })),
+          map((episodes) => loadEpisodesSuccess({ episodes: episodes, page: currentPage })),
           catchError((error: HttpErrorResponse) =>
             of(
               loadEpisodesFailure({
