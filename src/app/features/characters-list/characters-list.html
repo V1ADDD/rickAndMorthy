@@ -32,7 +32,12 @@
   <p>All characters loaded</p>
 }
 
-<cdk-virtual-scroll-viewport itemSize="300" orientation="horizontal" class="viewport">
+<cdk-virtual-scroll-viewport
+  itemSize="300"
+  orientation="horizontal"
+  class="viewport"
+  (scroll)="updateScroll($event)"
+>
   <div class="container">
     <div
       *cdkVirtualFor="let character of charactersSig()"

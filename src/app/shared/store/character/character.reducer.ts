@@ -117,4 +117,5 @@ export const {
   selectSearch,
   selectFilterGender,
   selectFilterStatus,
+  selectPages,
 } = charactersFeature;

@@ -2,11 +2,13 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '
 import { Store } from '@ngrx/store';
 import {
   selectAll,
+  selectCurrentPage,
   selectError,
   selectFavorites,
   selectFilterGender,
   selectFilterStatus,
   selectIsLoading,
+  selectPages,
   selectSearch,
 } from '../../shared/store/character/character.reducer';
 import { DatePipe, NgOptimizedImage } from '@angular/common';
@@ -62,6 +64,8 @@ export class CharactersList implements OnInit {
   public searchSig = this.store.selectSignal(selectSearch);
   public statusSig = this.store.selectSignal(selectFilterStatus);
   public genderSig = this.store.selectSignal(selectFilterGender);
+  public currentPageSig = this.store.selectSignal(selectCurrentPage);
+  public lastPageSig = this.store.selectSignal(selectPages);
 
   public statusFilters = statusFilters;
   public genderFilters = genderFilters;
@@ -139,5 +143,13 @@ export class CharactersList implements OnInit {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
+  }
+
+  public updateScroll(scroll: Event) {
+    const target = scroll.target as HTMLElement;
+    const distanceFromEnd = target.scrollWidth - target.scrollLeft - target.clientWidth;
+    if (distanceFromEnd < 50 && this.currentPageSig() < this.lastPageSig()) {
+      this.store.dispatch(addCharacters());
+    }
   }
 }
