@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { selectUsername } from './shared/store/user/user.reducer';
@@ -9,7 +9,7 @@ import { lsValues } from './shared/consts/localStorage.const';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, TitleCasePipe],
+  imports: [RouterOutlet, RouterLink, TitleCasePipe, RouterLinkActive],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -26,10 +26,6 @@ export class App implements OnInit {
 
   public ngOnInit(): void {
     this.store.dispatch(addCurrentUser());
-  }
-
-  public isActive(route: string): boolean {
-    return this.router.url === this.routes[route as keyof typeof this.routes];
   }
 
   public isGuest(): boolean {
