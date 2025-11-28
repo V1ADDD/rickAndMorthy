@@ -1,9 +1,12 @@
 <div class="character-details-container">
   <button class="back-button" [routerLink]="charactersLink">← Go back</button>
-  @if (error) {
-    <p class="error">{{ error }}</p>
+  @if (errorSig()) {
+    <p class="error">{{ errorSig() }}</p>
   }
-  @if (character$ | async; as character) {
+  @if (isLoadingSig()) {
+    <p>Loading character...</p>
+  }
+  @if (characterSig()[0]; as character) {
     <div class="character-card">
       <div class="character-header">
         <h1 class="character-name">{{ character.name }}</h1>

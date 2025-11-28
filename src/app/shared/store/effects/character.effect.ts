@@ -1,9 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
+  addCharacter,
   addCharacters,
   addCharactersFailure,
   addCharactersSuccess,
+  addCharacterSuccess,
   addFavorites,
   addFavoritesSuccess,
 } from '../character/character.action';
@@ -39,6 +41,28 @@ export class CharacterEffects {
               ),
             ),
           );
+      }),
+    ),
+  );
+
+  public loadCharacter$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(addCharacter),
+      mergeMap(({ id }) => {
+        return this.charactersService.getCharacterById(id).pipe(
+          map((character) =>
+            addCharacterSuccess({
+              character: character,
+            }),
+          ),
+          catchError((error: HttpErrorResponse) =>
+            of(
+              addCharactersFailure({
+                error: error,
+              }),
+            ),
+          ),
+        );
       }),
     ),
   );

@@ -1,6 +1,7 @@
 @use '../../shared/styles/mixins' as m;
 @use '../../shared/styles/variables' as v;
 @use '../../shared/styles/error';
+@use '../../shared/styles/text';
 
 .back-button {
   @include m.button;

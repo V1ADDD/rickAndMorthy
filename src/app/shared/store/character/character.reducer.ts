@@ -1,9 +1,11 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { CharactersState } from './character.store';
 import {
+  addCharacter,
   addCharacters,
   addCharactersFailure,
   addCharactersSuccess,
+  addCharacterSuccess,
   addFavorites,
   addFavoritesSuccess,
   resetCharacters,
@@ -47,6 +49,17 @@ const charactersFeature = createFeature({
     }),
     on(updateCharacter, (state: CharactersState, { character }) => {
       return adapter.updateOne({ id: character.id, changes: character }, state);
+    }),
+    on(addCharacter, (state: CharactersState) => ({
+      ...state,
+      isLoading: true,
+      error: null,
+    })),
+    on(addCharacterSuccess, (state: CharactersState, { character }) => {
+      return adapter.setOne(character, {
+        ...state,
+        isLoading: false,
+      });
     }),
     on(addFavorites, (state: CharactersState) => ({
       ...state,

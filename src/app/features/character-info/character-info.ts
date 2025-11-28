@@ -1,36 +1,34 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ToggleStatus } from '../../shared/directives/toggle-status';
-import { CharactersService } from '../../shared/services/characters.service';
-import { catchError, Observable, of } from 'rxjs';
-import { Character } from '../../shared/models/character';
-import { HttpErrorResponse } from '@angular/common/http';
 import { routePath } from '../../shared/consts/routePath.const';
+import { Store } from '@ngrx/store';
+import { addCharacter, resetCharacters } from '../../shared/store/character/character.action';
+import {
+  selectAll,
+  selectError,
+  selectIsLoading,
+} from '../../shared/store/character/character.reducer';
 
 @Component({
   selector: 'app-character-info',
-  imports: [AsyncPipe, DatePipe, ToggleStatus, RouterLink],
+  imports: [DatePipe, ToggleStatus, RouterLink],
   templateUrl: './character-info.html',
   styleUrl: './character-info.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CharacterInfo implements OnInit {
-  private charactersService = inject(CharactersService);
   private route = inject(ActivatedRoute);
+  private store = inject(Store);
 
-  public character$?: Observable<Character | null>;
-  public error?: string;
+  public characterSig = this.store.selectSignal(selectAll);
+  public isLoadingSig = this.store.selectSignal(selectIsLoading);
+  public errorSig = this.store.selectSignal(selectError);
   public charactersLink = routePath.characters;
 
   public ngOnInit(): void {
-    this.character$ = this.charactersService
-      .getCharacterById(this.route.snapshot.params['id'])
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          this.error = error.error.error;
-          return of(null);
-        }),
-      );
+    this.store.dispatch(resetCharacters());
+    this.store.dispatch(addCharacter({ id: this.route.snapshot.params['id'] }));
   }
 }

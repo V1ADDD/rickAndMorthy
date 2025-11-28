@@ -34,6 +34,12 @@ export const updateCharacter = createAction(
   props<{ character: Character }>(),
 );
 
+export const addCharacter = createAction('[Characters] Add Character', props<{ id: number }>());
+
+export const addCharacterSuccess = createAction(
+  '[Characters] Add Character Success',
+  props<{ character: Character }>(),
+);
 export const addFavorites = createAction('[Characters] Add Favorites');
 
 export const addFavoritesSuccess = createAction(
