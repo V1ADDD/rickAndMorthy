@@ -43,4 +43,8 @@ export const routes: Routes = [
       import('./features/favorites-list/favorites-list').then((comp) => comp.FavoritesList),
     canMatch: [authGuard],
   },
+  {
+    path: '**',
+    loadComponent: () => import('./features/not-found/not-found').then((comp) => comp.NotFound),
+  },
 ];

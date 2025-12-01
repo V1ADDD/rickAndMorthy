@@ -3,6 +3,7 @@ import { CanMatchFn, RedirectCommand, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectIsLoadingUser, selectUsername } from '../store/user/user.reducer';
 import { combineLatest, map, skipWhile, take } from 'rxjs';
+import { routePath } from '../consts/routePath.const';
 
 export const loginGuard: CanMatchFn = () => {
   const store = inject(Store);
@@ -13,7 +14,7 @@ export const loginGuard: CanMatchFn = () => {
     take(1),
     map(([user]) => {
       if (user) {
-        return new RedirectCommand(router.parseUrl('/characters'));
+        return new RedirectCommand(router.parseUrl(routePath.characters));
       }
       return true;
     }),
