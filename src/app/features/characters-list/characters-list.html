@@ -1,23 +1,19 @@
 <h1>Characters</h1>
-<form (submit)="searchCharacter($event)">
+<form>
   <label for="search">Find character:</label>
-  <input id="search" name="search" autocomplete="on" [value]="searchSig() || ''" />
+  <input id="search" name="search" autocomplete="on" [(ngModel)]="searchSignal" />
 </form>
 <div class="filter">
-  <select (change)="filterStatus($event)">
-    <option value="" [selected]="!statusSig()">Select status</option>
-    @for (filter of statusFilters; track $index) {
-      <option [value]="filter" [selected]="statusSig() === filter">
-        {{ filter }}
-      </option>
+  <select [(ngModel)]="statusSignal">
+    <option value="">Select status</option>
+    @for (filter of statusFilters; track filter) {
+      <option [value]="filter">{{ filter }}</option>
     }
   </select>
-  <select (change)="filterGender($event)">
-    <option value="" [selected]="!genderSig()">Select gender</option>
-    @for (filter of genderFilters; track $index) {
-      <option [value]="filter" [selected]="genderSig() === filter">
-        {{ filter }}
-      </option>
+  <select [(ngModel)]="genderSignal">
+    <option value="">Select gender</option>
+    @for (filter of genderFilters; track filter) {
+      <option [value]="filter">{{ filter }}</option>
     }
   </select>
 </div>
