@@ -8,8 +8,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { TruncatePipe } from '../../shared/pipes/truncate-pipe';
 import { RouterLink } from '@angular/router';
 import {
-  selectAll,
+  selectEntities,
   selectError,
+  selectFavorites,
   selectIsLoading,
 } from '../../shared/store/character/character.reducer';
 import { addFavorites, toggleFavorite } from '../../shared/store/character/character.action';
@@ -34,7 +35,8 @@ import { routePath } from '../../shared/consts/routePath.const';
 export class FavoritesList implements OnInit {
   private store = inject(Store);
 
-  public favoritesSig = this.store.selectSignal(selectAll);
+  public favoritesSig = this.store.selectSignal(selectEntities);
+  public favoritesIndexesSig = this.store.selectSignal(selectFavorites);
   public isLoadingSig = this.store.selectSignal(selectIsLoading);
   public errorSig = this.store.selectSignal(selectError);
   public characterLink = routePath.characters;
@@ -47,6 +49,5 @@ export class FavoritesList implements OnInit {
     event.stopPropagation();
 
     this.store.dispatch(toggleFavorite({ id: id }));
-    this.store.dispatch(addFavorites());
   }
 }

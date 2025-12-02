@@ -5,7 +5,6 @@ import { Store } from '@ngrx/store';
 import { selectUsername } from './shared/store/user/user.reducer';
 import { addCurrentUser, resetUser } from './shared/store/user/user.action';
 import { routePath } from './shared/consts/routePath.const';
-import { lsValues } from './shared/consts/localStorage.const';
 
 @Component({
   selector: 'app-root',
@@ -26,10 +25,6 @@ export class App implements OnInit {
 
   public ngOnInit(): void {
     this.store.dispatch(addCurrentUser());
-  }
-
-  public isGuest(): boolean {
-    return !localStorage.getItem(lsValues.accessToken);
   }
 
   public logOut(): void {

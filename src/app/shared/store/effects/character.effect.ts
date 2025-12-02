@@ -40,7 +40,7 @@ export class CharacterEffects {
       mergeMap(([, currentPage, search, filterStatus, filterGender]) => {
         const favorites = this.favoritesService.getFavorites();
         return this.charactersService
-          .getCharacters(currentPage + 1, search, filterStatus, filterGender)
+          .getCharacters(currentPage, search, filterStatus, filterGender)
           .pipe(
             map((characters) =>
               addCharactersSuccess({

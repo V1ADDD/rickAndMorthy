@@ -32,12 +32,6 @@ export class CharactersService {
     return this.http.get<Character[]>(`${this.API_URL}/${ids.join(',')}`);
   }
 
-  public getPageFromUrl(url: string | null): number {
-    if (!url) return 0;
-    const match = url.match(/[?&]page=(\d+)/);
-    return match ? parseInt(match[1], 10) : 1;
-  }
-
   public getCharacterById(id: number): Observable<Character> {
     return this.http.get<Character>(`${this.API_URL}/${id}`);
   }

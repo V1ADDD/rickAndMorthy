@@ -36,6 +36,7 @@ const charactersFeature = createFeature({
     on(addCharacters, (state: CharactersState) => ({
       ...state,
       isLoading: true,
+      currentPage: state.currentPage + 1,
       error: null,
     })),
     on(resetCharacters, () => initialCharactersState),
@@ -44,12 +45,16 @@ const charactersFeature = createFeature({
         ...state,
         pages: characters.info.pages,
         favorites: characters.info.favorites,
-        currentPage: state.currentPage + 1,
         isLoading: false,
       });
     }),
     on(addCharactersFailure, (state: CharactersState, { error }) => {
-      return adapter.removeAll({ ...state, isLoading: false, error: error.error.error });
+      return adapter.removeAll({
+        ...state,
+        currentPage: 0,
+        isLoading: false,
+        error: error.error.error,
+      });
     }),
     on(updateCharacter, (state: CharactersState, { character }) => {
       return adapter.updateOne({ id: character.id, changes: character }, state);
@@ -111,6 +116,7 @@ export const {
   reducer: charactersReducer,
   selectIsLoading,
   selectAll,
+  selectEntities,
   selectError,
   selectFavorites,
   selectCurrentPage,

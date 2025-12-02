@@ -1,6 +1,6 @@
 <header>
   <ul>
-    @if (isGuest()) {
+    @if (!userSig()) {
       <li>Login Page</li>
     } @else {
       @for (tab of tabs; track $index) {
