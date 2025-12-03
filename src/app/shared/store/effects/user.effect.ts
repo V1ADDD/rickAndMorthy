@@ -14,6 +14,7 @@ import {
 } from '../user/user.action';
 import { ResponseUser, Tokens } from '../../models/auth';
 import { Router } from '@angular/router';
+import { routePath } from '../../consts/routePath.const';
 
 @Injectable()
 export class UserEffects {
@@ -29,8 +30,8 @@ export class UserEffects {
           map((user: ResponseUser) => {
             localStorage.setItem('token', user.accessToken);
             localStorage.setItem('refreshToken', user.refreshToken);
-            this.router.navigate(['/characters']);
-            return addUserSuccess({ user: user });
+            this.router.navigate([routePath.characters]);
+            return addCurrentUser();
           }),
           catchError((error: HttpErrorResponse) =>
             of(
