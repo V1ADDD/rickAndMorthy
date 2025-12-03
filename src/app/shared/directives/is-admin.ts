@@ -1,21 +1,22 @@
-import { Directive, TemplateRef, ViewContainerRef, inject, effect } from '@angular/core';
+import { Directive, TemplateRef, ViewContainerRef, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectRole } from '../store/user/user.reducer';
 
 @Directive({
   selector: '[appIsAdmin]',
 })
-export class IsAdmin {
+export class IsAdmin implements OnInit {
   private viewContainer = inject(ViewContainerRef);
   private templateRef = inject(TemplateRef);
   private store = inject(Store);
 
   private userRoleSig = this.store.selectSignal(selectRole);
-  private userRoleEffect = effect(() => {
+
+  public ngOnInit(): void {
     if (this.userRoleSig() === 'admin' && !this.viewContainer.length) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else if (this.userRoleSig() !== 'admin' && this.viewContainer.length) {
       this.viewContainer.clear();
     }
-  });
+  }
 }
