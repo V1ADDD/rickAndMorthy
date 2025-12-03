@@ -1,0 +1,21 @@
+import { Directive, TemplateRef, ViewContainerRef, inject, effect } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { selectRole } from '../store/user/user.reducer';
+
+@Directive({
+  selector: '[appIsAdmin]',
+})
+export class IsAdmin {
+  private viewContainer = inject(ViewContainerRef);
+  private templateRef = inject(TemplateRef);
+  private store = inject(Store);
+
+  private userRoleSig = this.store.selectSignal(selectRole);
+  private userRoleEffect = effect(() => {
+    if (this.userRoleSig() === 'admin' && !this.viewContainer.length) {
+      this.viewContainer.createEmbeddedView(this.templateRef);
+    } else if (this.userRoleSig() !== 'admin' && this.viewContainer.length) {
+      this.viewContainer.clear();
+    }
+  });
+}

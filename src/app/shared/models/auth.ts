@@ -8,7 +8,10 @@ export interface ResponseUser {
   image: string;
   accessToken: string;
   refreshToken: string;
+  role: UserRole;
 }
+
+export type UserRole = 'admin' | 'moderator' | 'user';
 
 export interface authCredentials {
   username: string;

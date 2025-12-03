@@ -43,7 +43,7 @@
       <div class="card-header">
         <h2 [title]="character.name">{{ character.name | truncate }}</h2>
         <div class="card-actions">
-          <button mat-icon-button (click)="openEditModal(character, $event)">
+          <button mat-icon-button *appIsAdmin (click)="openEditModal(character, $event)">
             <mat-icon>edit</mat-icon>
           </button>
           <button mat-icon-button (click)="toggleFavorite(character.id, $event)">

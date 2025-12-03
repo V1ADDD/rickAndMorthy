@@ -30,6 +30,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { genderFilters, statusFilters } from '../../shared/consts/filters.const';
 import { createQueryParamSignal } from '../../shared/utils/query-params.utils';
+import { IsAdmin } from '../../shared/directives/is-admin';
 
 @Component({
   selector: 'app-characters-list',
@@ -39,6 +40,7 @@ import { createQueryParamSignal } from '../../shared/utils/query-params.utils';
     DatePipe,
     TruncatePipe,
     ToggleStatus,
+    IsAdmin,
     RouterLink,
     MatIconModule,
     MatButtonModule,

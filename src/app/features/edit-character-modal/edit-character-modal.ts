@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, DestroyRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
@@ -7,6 +7,8 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { Character } from '../../shared/models/character';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-edit-character-modal',
@@ -19,7 +21,8 @@ export class EditCharacterModal implements OnInit {
   public editForm!: FormGroup;
 
   private fb = inject(FormBuilder);
-  private dialogRef = inject(MatDialogRef);
+  private dialogRef = inject(MatDialogRef<EditCharacterModal>);
+  private destroyRef = inject(DestroyRef);
   public data: Character = inject(MAT_DIALOG_DATA);
 
   public ngOnInit(): void {
@@ -31,15 +34,38 @@ export class EditCharacterModal implements OnInit {
       originName: [this.data.origin.name, Validators.required],
       locationName: [this.data.location.name, Validators.required],
     });
+
+    this.dialogRef
+      .backdropClick()
+      .pipe(
+        tap(() => this.onCancel()),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
+
+    this.dialogRef
+      .keydownEvents()
+      .pipe(
+        tap((event) => {
+          if (event.key === 'Escape') {
+            this.onCancel();
+          }
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 
   public onCancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(this.data);
   }
 
   public onSave(): void {
     if (this.editForm.valid) {
-      this.dialogRef.close({ ...this.data, ...this.editForm.value });
+      this.dialogRef.close({
+        ...this.data,
+        ...this.editForm.value,
+      });
     }
   }
 }

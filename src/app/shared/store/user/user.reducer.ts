@@ -26,6 +26,7 @@ const charactersFeature = createFeature({
       username: user.username,
       accessToken: user.accessToken,
       refreshToken: user.refreshToken,
+      role: user.role,
       isLoading: false,
     })),
     on(addUserFailure, (state: UserState, { error }) => ({
@@ -67,4 +68,5 @@ export const {
   selectUsername,
   selectAccessToken,
   selectRefreshToken,
+  selectRole,
 } = charactersFeature;
