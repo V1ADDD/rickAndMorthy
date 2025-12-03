@@ -13,10 +13,8 @@ export class IsAdmin implements OnInit {
   private userRoleSig = this.store.selectSignal(selectRole);
 
   public ngOnInit(): void {
-    if (this.userRoleSig() === 'admin' && !this.viewContainer.length) {
+    if (this.userRoleSig() === 'admin') {
       this.viewContainer.createEmbeddedView(this.templateRef);
-    } else if (this.userRoleSig() !== 'admin' && this.viewContainer.length) {
-      this.viewContainer.clear();
     }
   }
 }
