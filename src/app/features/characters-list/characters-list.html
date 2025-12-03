@@ -1,7 +1,7 @@
 <h1>Characters</h1>
-<form>
+<form [formGroup]="form">
   <label for="search">Find character:</label>
-  <input id="search" name="search" autocomplete="on" [(ngModel)]="searchSignal" />
+  <input id="search" formControlName="search" autocomplete="on" />
 </form>
 <div class="filter">
   <select [(ngModel)]="statusSignal">

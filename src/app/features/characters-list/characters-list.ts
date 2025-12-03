@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   selectAll,
@@ -9,7 +16,7 @@ import {
   selectPages,
 } from '../../shared/store/character/character.reducer';
 import { DatePipe, NgOptimizedImage } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Character } from '../../shared/models/character';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TruncatePipe } from '../../shared/pipes/truncate-pipe';
@@ -19,7 +26,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { EditCharacterModal } from '../edit-character-modal/edit-character-modal';
-import { take, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, take, tap } from 'rxjs';
 import {
   addCharacters,
   resetCharacters,
@@ -45,15 +52,19 @@ import { IsAdmin } from '../../shared/directives/is-admin';
     MatIconModule,
     MatButtonModule,
     NgOptimizedImage,
+    ReactiveFormsModule,
   ],
   templateUrl: './characters-list.html',
   styleUrl: './characters-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CharactersList {
+export class CharactersList implements OnInit {
   private store = inject(Store);
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
+
+  public form!: FormGroup;
+  private fb = inject(FormBuilder);
 
   public charactersSig = this.store.selectSignal(selectAll);
   public isLoadingSig = this.store.selectSignal(selectIsLoading);
@@ -94,6 +105,22 @@ export class CharactersList {
   }
   set genderSignal(value: string) {
     this._genderSignal.set(value ? value : null);
+  }
+
+  public ngOnInit(): void {
+    this.form = this.fb.group({
+      search: [this.searchSignal()],
+    });
+
+    this.form
+      .get('search')
+      ?.valueChanges.pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        tap((search) => this.searchSignal.set(search)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 
   public toggleFavorite(id: number, event: MouseEvent): void {
