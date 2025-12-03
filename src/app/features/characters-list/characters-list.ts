@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   selectAll,
@@ -22,8 +22,10 @@ import { EditCharacterModal } from '../edit-character-modal/edit-character-modal
 import { take, tap } from 'rxjs';
 import {
   addCharacters,
+  resetCharacters,
   toggleFavorite,
   updateCharacter,
+  updateParams,
 } from '../../shared/store/character/character.action';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { genderFilters, statusFilters } from '../../shared/consts/filters.const';
@@ -64,6 +66,19 @@ export class CharactersList {
   public searchSignal = createQueryParamSignal('search');
   private _statusSignal = createQueryParamSignal('status');
   private _genderSignal = createQueryParamSignal('gender');
+  private filterEffect = effect(() => {
+    this.store.dispatch(resetCharacters());
+    this.store.dispatch(
+      updateParams({
+        params: {
+          search: this.searchSignal(),
+          status: this._statusSignal(),
+          gender: this._genderSignal(),
+        },
+      }),
+    );
+    this.store.dispatch(addCharacters());
+  });
 
   public get statusSignal(): string | null {
     return this._statusSignal() ?? '';
