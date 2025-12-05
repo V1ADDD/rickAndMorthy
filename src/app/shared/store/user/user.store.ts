@@ -6,6 +6,7 @@ export interface UserState {
   refreshToken: string | null;
   isLoading: boolean;
   error: string | null;
+  currentUserError: string | null;
   role: UserRole | null;
 }
 
@@ -15,5 +16,6 @@ export const initialUserState: UserState = {
   refreshToken: null,
   isLoading: false,
   error: null,
+  currentUserError: null,
   role: null,
 };

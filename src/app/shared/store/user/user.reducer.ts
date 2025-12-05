@@ -53,10 +53,10 @@ const charactersFeature = createFeature({
       isLoading: true,
       error: null,
     })),
-    on(addCurrentUserFailure, (state: UserState) => ({
+    on(addCurrentUserFailure, (state: UserState, { error }) => ({
       ...state,
       isLoading: false,
-      error: 'Please log in!',
+      currentUserError: error.error.message,
     })),
   ),
 });

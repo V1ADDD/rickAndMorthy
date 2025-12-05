@@ -4,7 +4,7 @@
   <p>Загрузка...</p>
 } @else {
   <div class="container">
-    @for (location of locationsSig(); track $index) {
+    @for (location of locationsSig(); track location.id) {
       <div class="location-info">
         <h2>{{ location.name }}</h2>
         <p>Type: {{ location.type }}</p>

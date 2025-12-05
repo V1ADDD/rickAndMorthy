@@ -37,4 +37,12 @@
   border: v.$button_border;
   border-radius: 6px;
   font-size: 0.875rem;
+
+  &.borderError:focus {
+    outline-color: v.$error_color;
+  }
+
+  &.borderError {
+    border-color: v.$error_color;
+  }
 }

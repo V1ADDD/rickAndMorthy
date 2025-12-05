@@ -65,6 +65,12 @@ export class EditCharacterModal implements OnInit {
       this.dialogRef.close({
         ...this.data,
         ...this.editForm.value,
+        origin: {
+          name: this.editForm.get('originName')?.value,
+        },
+        location: {
+          name: this.editForm.get('locationName')?.value,
+        },
       });
     }
   }
