@@ -1,0 +1,48 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <h2>Sign In</h2>
+  <label for="username">Username</label>
+  <input
+    id="username"
+    name="username"
+    formControlName="username"
+    [class.borderError]="username.invalid && (username.dirty || username.touched)"
+  />
+  @if (username.invalid && (username.dirty || username.touched)) {
+    <p class="error">
+      Username is
+      @if (username.value === '') {
+        required!
+      } @else {
+        too short!
+      }
+    </p>
+  }
+  <label for="password">Password</label>
+  <input
+    id="password"
+    name="password"
+    formControlName="password"
+    type="password"
+    [class.borderError]="password.invalid && (password.dirty || password.touched)"
+  />
+  @if (password.invalid && (password.dirty || password.touched)) {
+    <p class="error">
+      Password is
+      @if (password.value === '') {
+        required!
+      } @else {
+        too short!
+      }
+    </p>
+  }
+  @if (errorSig()) {
+    <p class="error">{{ errorSig() }}</p>
+  }
+  @if (isLoadingSig()) {
+    <p>Loading...</p>
+  }
+  <div class="navigation">
+    <button type="reset">Reset</button>
+    <button type="submit" [disabled]="!form.valid || isLoadingSig()">Submit</button>
+  </div>
+</form>

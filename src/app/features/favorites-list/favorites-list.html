@@ -1,0 +1,45 @@
+<h1>Favorite Characters</h1>
+@if (isLoadingSig()) {
+  <p>Загрузка...</p>
+} @else {
+  @if (errorSig() || !favoritesIndexesSig().length) {
+    <p class="error">{{ errorSig() || "You didn't like anything yet." }}</p>
+  } @else {
+    <cdk-virtual-scroll-viewport itemSize="300" orientation="horizontal" class="viewport">
+      <div class="container">
+        <div
+          *cdkVirtualFor="let id of favoritesIndexesSig()"
+          class="character-info"
+          [routerLink]="characterLink + '/' + id"
+        >
+          @if (favoritesSig()[id]; as character) {
+            <div class="card-header">
+              <h2 [title]="character.name">{{ character.name | truncate }}</h2>
+              <button mat-icon-button (click)="toggleFavorite(character.id, $event)">
+                <mat-icon (click)="toggleFavorite(character.id, $event)" class="favorite">
+                  star
+                </mat-icon>
+              </button>
+            </div>
+            <div class="img-container">
+              <img
+                [ngSrc]="character.image"
+                width="300"
+                height="300"
+                priority
+                [alt]="character.name"
+              />
+            </div>
+            <p appToggleStatus="{{ character.status }}"></p>
+            <p>Species: {{ character.species }}</p>
+            <p>Type: {{ character.type || 'Not specified' }}</p>
+            <p>Gender: {{ character.gender }}</p>
+            <p>Origin: {{ character.origin.name }}</p>
+            <p>Location: {{ character.location.name }}</p>
+            <p>Created: {{ character.created | date: 'short' }}</p>
+          }
+        </div>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  }
+}

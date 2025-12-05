@@ -1,12 +1,35 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { TitleCasePipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { selectUsername } from './shared/store/user/user.reducer';
+import { addCurrentUser, resetUser } from './shared/store/user/user.action';
+import { routePath } from './shared/consts/routePath.const';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, RouterLink, TitleCasePipe, RouterLinkActive],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('rickAndMorthy');
+
+  private store = inject(Store);
+  private router = inject(Router);
+
+  public userSig = this.store.selectSignal(selectUsername);
+
+  public routes = routePath;
+  public tabs = Object.keys(this.routes).filter((r) => r !== 'login');
+
+  public ngOnInit(): void {
+    this.store.dispatch(addCurrentUser());
+  }
+
+  public logOut(): void {
+    localStorage.clear();
+    this.store.dispatch(resetUser());
+    this.router.navigate([this.routes.login]);
+  }
 }

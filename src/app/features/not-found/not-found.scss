@@ -1,0 +1,12 @@
+@use '../../shared/styles/mixins' as m;
+@use '../../shared/styles/text';
+
+.no-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  button {
+    @include m.button;
+  }
+}

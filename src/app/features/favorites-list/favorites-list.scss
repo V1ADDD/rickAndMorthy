@@ -1,0 +1,27 @@
+@use '../../shared/styles/text';
+@use '../../shared/styles/viewport';
+@use '../../shared/styles/error';
+@use '../../shared/styles/mixins' as m;
+
+.character-info {
+  @include m.card;
+
+  button {
+    margin: 0;
+    vertical-align: top;
+  }
+
+  .favorite {
+    color: #ffd740;
+  }
+
+  &:hover {
+    scale: 0.99;
+    cursor: pointer;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,26 @@
+@use '../../shared/styles/text';
+@use '../../shared/styles/mixins' as m;
+
+h2 {
+  margin: 20px 0 0 20px;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 0 16px;
+}
+
+label {
+  @include m.label;
+}
+
+button {
+  @include m.button;
+}
+
+input,
+select {
+  @include m.input;
+}

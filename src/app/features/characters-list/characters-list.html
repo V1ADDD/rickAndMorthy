@@ -1,0 +1,68 @@
+<h1>Characters</h1>
+<form [formGroup]="form">
+  <label for="search">Find character:</label>
+  <input id="search" formControlName="search" autocomplete="on" />
+</form>
+<div class="filter">
+  <select [(ngModel)]="statusSignal">
+    <option value="">Select status</option>
+    @for (filter of statusFilters; track filter) {
+      <option [value]="filter">{{ filter }}</option>
+    }
+  </select>
+  <select [(ngModel)]="genderSignal">
+    <option value="">Select gender</option>
+    @for (filter of genderFilters; track filter) {
+      <option [value]="filter">{{ filter }}</option>
+    }
+  </select>
+</div>
+
+@if (errorSig()) {
+  <p class="error">{{ errorSig() }}</p>
+}
+
+@if (isLoadingSig()) {
+  <p>Loading...</p>
+} @else {
+  <p>All characters loaded</p>
+}
+
+<cdk-virtual-scroll-viewport
+  itemSize="300"
+  orientation="horizontal"
+  class="viewport"
+  (scroll)="updateScroll($event)"
+>
+  <div class="container">
+    <div
+      *cdkVirtualFor="let character of charactersSig()"
+      [routerLink]="character.id + ''"
+      class="character-info"
+    >
+      <div class="card-header">
+        <h2 [title]="character.name">{{ character.name | truncate }}</h2>
+        <div class="card-actions">
+          <button mat-icon-button *appIsAdmin (click)="openEditModal(character, $event)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="toggleFavorite(character.id, $event)">
+            <mat-icon [class.favorite]="favoritesSig().includes(character.id)">
+              {{ favoritesSig().includes(character.id) ? 'star' : 'star_border' }}
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="img-container">
+        <img [ngSrc]="character.image" width="300" height="300" priority [alt]="character.name" />
+      </div>
+      <p appToggleStatus="{{ character.status }}"></p>
+      <p>Species: {{ character.species }}</p>
+      <p>Type: {{ character.type || 'Not specified' }}</p>
+      <p>Gender: {{ character.gender }}</p>
+      <p>Origin: {{ character.origin.name }}</p>
+      <p>Location: {{ character.location.name }}</p>
+      <p>Created: {{ character.created | date: 'short' }}</p>
+    </div>
+  </div>
+</cdk-virtual-scroll-viewport>

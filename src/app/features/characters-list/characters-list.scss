@@ -1,0 +1,50 @@
+@use '../../shared/styles/text';
+@use '../../shared/styles/viewport';
+@use '../../shared/styles/error';
+@use '../../shared/styles/mixins' as m;
+
+.character-info {
+  @include m.card;
+
+  button {
+    margin: 0;
+    vertical-align: top;
+  }
+
+  .favorite {
+    color: #ffd740;
+  }
+
+  &:hover {
+    scale: 0.99;
+    cursor: pointer;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+form {
+  margin: 20px;
+  label {
+    @include m.label;
+    margin-bottom: 8px;
+  }
+
+  input {
+    @include m.input;
+    width: 300px;
+  }
+}
+
+.filter {
+  margin: 20px;
+  display: flex;
+  gap: 8px;
+
+  select {
+    @include m.input;
+  }
+}
